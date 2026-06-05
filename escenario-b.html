@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escenario B — Vaciado Crítico de Reservas</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand"><div class="brand-icon">🧮</div><span>MétodosNum</span></a>
+    <button class="hamburger" id="hamBtn"><span></span><span></span><span></span></button>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="escenario-a.html">A · Abastecimiento</a></li>
+      <li><a href="escenario-b.html" class="active">B · Reservas</a></li>
+      <li><a href="escenario-c.html">C · Precios</a></li>
+      <li><a href="escenario-d.html">D <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-e.html">E <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-f.html">F <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-g.html">G <span class="badge-dev">DEV</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="page-hero">
+  <div class="page-hero-content">
+    <div class="scenario-chip">⛽ Escenario B · Ecuaciones Diferenciales Ordinarias</div>
+    <h1>Vaciado Crítico de Reservas de Carburantes</h1>
+    <p class="lead">
+      Simula cómo disminuyen las reservas de una planta cuando la demanda supera
+      el reabastecimiento. Predice cuándo se alcanzará el nivel de crisis.
+    </p>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ── CONTEXTO ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-green">📋</div>
+      <h2>Contexto del Problema Real</h2>
+    </div>
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1rem">
+      Cuando existen bloqueos de rutas o restricciones en las importaciones, las plantas
+      de distribución de carburante experimentan una <strong style="color:var(--danger)">tasa de entrada reducida</strong>
+      mientras que la <strong style="color:var(--accent)">demanda aumenta por pánico</strong>.
+      Este modelo simula exactamente ese proceso dinámico.
+    </p>
+
+    <!-- Modelo matemático -->
+    <div class="card" style="margin-bottom:0;background:var(--bg-surface)">
+      <p style="font-size:.82rem;font-weight:800;color:var(--text-secondary);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.05em">
+        Modelo Matemático — Definición de Variables
+      </p>
+      <div class="grid g-2">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Variable / Parámetro</th><th>Descripción</th><th>Unidad</th></tr></thead>
+            <tbody>
+              <tr><td class="var-name">R(t)</td><td class="tnorm">Reserva disponible en el tiempo t</td><td class="mono">Miles de litros</td></tr>
+              <tr><td class="var-name">R₀</td><td class="tnorm">Reserva inicial (condición inicial)</td><td class="mono">Miles de litros</td></tr>
+              <tr><td class="var-name">E</td><td class="tnorm">Tasa de entrada/reabastecimiento (constante)</td><td class="mono">Miles lts / día</td></tr>
+              <tr><td class="var-name">C₀</td><td class="tnorm">Consumo base diario (demanda normal)</td><td class="mono">Miles lts / día</td></tr>
+              <tr><td class="var-name">α</td><td class="tnorm">Tasa de crecimiento del consumo (pánico/demanda)</td><td class="mono">día⁻¹</td></tr>
+              <tr><td class="var-name">R_crit</td><td class="tnorm">Nivel crítico de alerta (reserva mínima)</td><td class="mono">Miles de litros</td></tr>
+              <tr><td class="var-name">h</td><td class="tnorm">Paso de integración numérica</td><td class="mono">días</td></tr>
+              <tr><td class="var-name">T</td><td class="tnorm">Horizonte de simulación</td><td class="mono">días</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <p style="font-size:.82rem;font-weight:700;color:var(--text-secondary);margin-bottom:.5rem">Ecuación diferencial del modelo:</p>
+          <div class="formula">dR/dt = E − C(t)<br><br>C(t) = C₀ · (1 + α · t)<br><br>→ dR/dt = E − C₀·(1 + α·t)</div>
+          <div class="alert info" style="margin-top:.5rem">
+            <span class="aicon">ℹ</span>
+            <span>Cuando E &lt; C(t), la reserva <strong>disminuye</strong>. El tiempo crítico
+            t* se alcanza cuando R(t*) = R_crit.</span>
+          </div>
+          <p style="font-size:.82rem;font-weight:700;color:var(--text-secondary);margin-top:.8rem;margin-bottom:.5rem">Solución analítica (para validación):</p>
+          <div class="formula">R(t) = R₀ + E·t − C₀·(t + α·t²/2)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CONFIGURACIÓN ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-green">⚙</div>
+      <h2>Parámetros de Simulación</h2>
+    </div>
+
+    <div class="alert info" style="margin-bottom:1rem">
+      <span class="aicon">ℹ</span>
+      <span>Se ejecutan los <strong>3 métodos simultáneamente</strong> (Euler, Heun, RK4) y la solución analítica.
+      Cada método mostrará su tabla de pasos completa.</span>
+    </div>
+    <!-- Botones de escenario -->
+    <div class="btn-group mb-2">
+      <button class="btn btn-outline" onclick="cargarEscenario('normal')">🟢 Escenario Normal</button>
+      <button class="btn btn-outline" onclick="cargarEscenario('crisis')">🔴 Crisis Severa</button>
+      <button class="btn btn-outline" onclick="cargarEscenario('panico')">🟠 Pánico de Compra</button>
+    </div>
+
+    <div class="grid g-2">
+      <!-- Col 1: Parámetros del modelo -->
+      <div>
+        <p class="form-label fw-bold" style="color:#fff;font-size:.9rem;margin-bottom:.8rem">Parámetros del Modelo</p>
+        <div class="row c2">
+          <div class="form-group">
+            <label class="form-label">Reserva inicial R₀ <span class="req">*</span></label>
+            <input type="number" class="form-control" id="R0" value="100" min="1" step="1" placeholder="miles de litros">
+            <p style="font-size:.72rem;color:var(--text-muted)">Miles de litros</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nivel crítico R_crit <span class="req">*</span></label>
+            <input type="number" class="form-control" id="Rcrit" value="20" min="0" step="1">
+            <p style="font-size:.72rem;color:var(--text-muted)">Nivel de alerta (miles lts)</p>
+          </div>
+        </div>
+        <div class="row c2">
+          <div class="form-group">
+            <label class="form-label">Entrada E (reabastecimiento)</label>
+            <input type="number" class="form-control" id="E" value="3" min="0" step="0.1">
+            <p style="font-size:.72rem;color:var(--text-muted)">Miles lts / día</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Consumo base C₀</label>
+            <input type="number" class="form-control" id="C0" value="5" min="0.1" step="0.1">
+            <p style="font-size:.72rem;color:var(--text-muted)">Miles lts / día</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tasa de crecimiento del consumo α</label>
+          <input type="number" class="form-control" id="alpha" value="0.02" min="0" step="0.005">
+          <p style="font-size:.72rem;color:var(--text-muted)">
+            α = 0: consumo constante · α &gt; 0: crece por pánico/demanda
+          </p>
+        </div>
+      </div>
+
+      <!-- Col 2: Parámetros numéricos -->
+      <div>
+        <p class="form-label fw-bold" style="color:#fff;font-size:.9rem;margin-bottom:.8rem">Parámetros Numéricos</p>
+        <div class="row c2">
+          <div class="form-group">
+            <label class="form-label">Paso h (días)</label>
+            <input type="number" class="form-control" id="h" value="0.5" min="0.01" step="0.1" max="1">
+            <p style="font-size:.72rem;color:var(--text-muted)">Pasos más pequeños → mayor precisión</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Horizonte T (días)</label>
+            <input type="number" class="form-control" id="T" value="30" min="5" step="1" max="365">
+            <p style="font-size:.72rem;color:var(--text-muted)">Duración de la simulación</p>
+          </div>
+        </div>
+        <div class="alert success" style="margin-top:.5rem;font-size:.82rem">
+          <span class="aicon">✅</span>
+          <span>Los <strong>3 métodos</strong> (Euler, Heun, RK4) y la solución analítica se ejecutan siempre.
+          Cada uno tiene su propia tabla de pasos.</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="sep">
+    <div class="btn-group">
+      <button class="btn btn-primary btn-lg" onclick="ejecutarSimulacion()">▶ Simular Vaciado de Reservas</button>
+      <button class="btn btn-outline" onclick="limpiarResultados()">↺ Reiniciar</button>
+    </div>
+  </div>
+
+  <!-- ── RESULTADOS ── -->
+  <div id="resultadosSection" class="hidden">
+
+    <!-- Alerta global -->
+    <div id="alertGlobal" style="margin-bottom:.5rem"></div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon ci-green">📊</div>
+        <h2>Resumen Comparativo — Los 3 Métodos</h2>
+      </div>
+
+      <!-- KPIs -->
+      <div class="stats-grid" id="kpis"></div>
+
+      <!-- Gráfico principal -->
+      <p class="chart-title mt-2">📉 Evolución de la Reserva R(t) — Comparación de Métodos</p>
+      <div class="chart-box tall">
+        <canvas id="chartReserva"></canvas>
+      </div>
+
+      <!-- Error vs analítica -->
+      <p class="chart-title mt-2">🔍 Error absoluto vs. Solución Analítica (log)</p>
+      <div class="chart-box">
+        <canvas id="chartError"></canvas>
+      </div>
+
+      <!-- Comparación de métodos -->
+      <hr class="sep">
+      <p class="form-label">Comparación de Métodos Numéricos</p>
+      <div class="table-wrap" id="tablaComparacion"></div>
+
+      <!-- Interpretación -->
+      <div class="interpretation" id="interpretacion"></div>
+    </div>
+
+    <!-- Tabs con tabla de pasos por método -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon ci-blue">🔢</div>
+        <h2>Resolución Paso a Paso por Método</h2>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:.8rem">
+        Selecciona el método para ver cada paso de integración con sus valores intermedios (k₁, k₂, k₃, k₄).
+      </p>
+      <div class="tabs" id="methodTabsNav"></div>
+      <div id="methodTabsContent" style="margin-top:.5rem"></div>
+    </div>
+
+  </div>
+
+  <!-- ── ALGORITMOS ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-purple">📖</div>
+      <h2>Explicación de los Algoritmos EDO</h2>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="mostrarTab(this,'tEuler')">Euler</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tHeun')">Heun</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tRK4')">Runge-Kutta 4</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tComp')">Comparación</button>
+    </div>
+
+    <!-- Euler -->
+    <div class="tab-pane active" id="tEuler">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        El método de Euler es el más simple para integrar EDOs. Aproxima la función
+        usando la tangente en el punto actual. Es de <strong>orden 1</strong>: el error
+        local es proporcional a h².
+      </p>
+      <div class="formula">R(t+h) = R(t) + h · f(t, R(t))  donde  f(t,R) = E − C₀·(1 + α·t)</div>
+      <div class="algo"><span class="cm">── Método de Euler ──</span>
+t = 0 ; R = R₀
+<span class="kw">mientras</span> t &lt; T:
+    k₁ = f(t, R)              <span class="cm">← pendiente en el punto actual</span>
+    R  = R + h · k₁           <span class="cm">← avanzar un paso</span>
+    t  = t + h
+    <span class="kw">si</span> R ≤ 0: R = 0 ; <span class="kw">detener</span>  <span class="cm">← reserva agotada</span></div>
+      <div class="alert warning mt-1">
+        <span class="aicon">⚠</span>
+        <span>Euler acumula error con pasos grandes. Para h = 0.5 día, el error puede ser notable
+        en simulaciones largas. Comparar con RK4 para ver la diferencia.</span>
+      </div>
+    </div>
+
+    <!-- Heun -->
+    <div class="tab-pane" id="tHeun">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        El método de Heun (Euler Modificado) usa un <strong>predictor-corrector</strong>:
+        primero predice con Euler y luego corrige promediando las pendientes inicial y final.
+        Es de <strong>orden 2</strong>.
+      </p>
+      <div class="formula">
+        k₁ = f(t, R)  ·  k₂ = f(t+h, R+h·k₁)  ·  R(t+h) = R(t) + (h/2)·(k₁ + k₂)
+      </div>
+      <div class="algo"><span class="cm">── Método de Heun (Predictor-Corrector) ──</span>
+<span class="kw">mientras</span> t &lt; T:
+    k₁ = f(t, R)               <span class="cm">← pendiente en tₙ (Euler)</span>
+    R_pred = R + h · k₁        <span class="cm">← predicción</span>
+    k₂ = f(t+h, R_pred)       <span class="cm">← pendiente en tₙ₊₁ usando predicción</span>
+    R = R + (h/2)·(k₁ + k₂)  <span class="cm">← corrección: promedio de pendientes</span>
+    t = t + h</div>
+    </div>
+
+    <!-- RK4 -->
+    <div class="tab-pane" id="tRK4">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        Runge-Kutta 4 es el estándar de facto para EDOs. Combina cuatro pendientes
+        ponderadas para lograr <strong>orden 4</strong> con alta precisión y estabilidad.
+      </p>
+      <div class="formula">
+        R(t+h) = R(t) + (h/6)·(k₁ + 2k₂ + 2k₃ + k₄)
+      </div>
+      <div class="algo"><span class="cm">── Runge-Kutta de 4° Orden ──</span>
+<span class="kw">mientras</span> t &lt; T:
+    k₁ = f(t,       R)              <span class="cm">← pendiente al inicio</span>
+    k₂ = f(t + h/2, R + h/2·k₁)   <span class="cm">← pendiente en punto medio (k₁)</span>
+    k₃ = f(t + h/2, R + h/2·k₂)   <span class="cm">← pendiente en punto medio (k₂)</span>
+    k₄ = f(t + h,   R + h·k₃)     <span class="cm">← pendiente al final</span>
+    R  = R + (h/6)·(k₁ + 2k₂ + 2k₃ + k₄)
+    t  = t + h</div>
+      <div class="alert success mt-1">
+        <span class="aicon">✅</span>
+        <span>RK4 es el método más preciso de los tres. Para este problema, con h = 0.5,
+        su error es prácticamente indistinguible de la solución analítica.</span>
+      </div>
+    </div>
+
+    <!-- Comparación -->
+    <div class="tab-pane" id="tComp">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Método</th><th>Orden</th><th>Evaluaciones de f</th><th>Precisión</th><th>Costo comp.</th><th>Recomendado para</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="tnorm fw-bold">Euler</td>
+              <td>O(h)</td><td>1 por paso</td>
+              <td class="err">Baja (h grande)</td>
+              <td class="ok">Muy bajo</td>
+              <td class="tnorm">Estimaciones rápidas, h pequeño</td>
+            </tr>
+            <tr>
+              <td class="tnorm fw-bold">Heun</td>
+              <td>O(h²)</td><td>2 por paso</td>
+              <td class="hl">Media-Alta</td>
+              <td>Bajo</td>
+              <td class="tnorm">Balance precisión/velocidad</td>
+            </tr>
+            <tr>
+              <td class="tnorm fw-bold">RK4</td>
+              <td>O(h⁴)</td><td>4 por paso</td>
+              <td class="ok">Muy Alta</td>
+              <td>Moderado</td>
+              <td class="tnorm">Simulaciones de producción</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="alert info mt-1">
+        <span class="aicon">ℹ</span>
+        <span>Para este problema, con h = 0.5 días, RK4 coincide con la solución analítica
+        hasta 4-5 decimales, mientras que Euler puede tener errores del 2-5%.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PREGUNTAS ── -->
+  <div class="card">
+    <div class="card-header"><div class="card-icon ci-orange">❓</div><h2>Preguntas que Responde la Simulación</h2></div>
+    <ul class="questions-list">
+      <li>¿En cuántos días la reserva alcanza el nivel crítico R_crit?</li>
+      <li>¿Qué pasa si aumenta el consumo diario (α mayor)?</li>
+      <li>¿Qué pasa si se reduce el reabastecimiento a la mitad?</li>
+      <li>¿Cuál método numérico da la aproximación más estable?</li>
+      <li>¿Cuál es la diferencia real entre Euler, Heun y RK4 en este escenario?</li>
+      <li>¿Es posible evitar el vaciado aumentando la tasa de entrada E?</li>
+    </ul>
+  </div>
+
+  <!-- ── CONCLUSIONES ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-green">🎯</div>
+      <h2>Conclusiones del Escenario B</h2>
+    </div>
+
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1.2rem">
+      La modelación del vaciado de reservas mediante la EDO <strong>dR/dt = E − C₀·(1 + α·t)</strong>
+      permite predecir con precisión el momento en que una planta de distribución alcanzará
+      el nivel crítico. La comparación entre los tres métodos numéricos revela diferencias
+      importantes en precisión y aplicabilidad en contextos de crisis.
+    </p>
+
+    <!-- Comparativa -->
+    <div class="grid g-2" style="margin-bottom:1.2rem">
+      <div class="rpanel warning">
+        <p style="font-weight:700;color:#fcd34d;margin-bottom:.5rem">Precisión y Orden de Error</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Método</th><th>Orden</th><th>Error local</th><th>Evaluaciones/paso</th></tr></thead>
+            <tbody>
+              <tr><td>Euler</td><td>O(h)</td><td>O(h²)</td><td>1</td></tr>
+              <tr><td>Heun</td><td>O(h²)</td><td>O(h³)</td><td>2</td></tr>
+              <tr><td class="ok fw-bold">RK4</td><td class="ok">O(h⁴)</td><td>O(h⁵)</td><td>4</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="rpanel info">
+        <p style="font-weight:700;color:#93c5fd;margin-bottom:.5rem">Implicación en la Predicción de Crisis</p>
+        <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.8">
+          <li>Con h = 0.5 días, RK4 coincide con la solución analítica hasta 4–5 decimales.</li>
+          <li>Euler puede acumular errores de 2–5% en horizontes de 30 días, lo que puede desplazar la predicción del tiempo crítico en hasta 1–2 días.</li>
+          <li>1 día de error en la predicción equivale a no activar el plan de contingencia a tiempo en un escenario real de crisis.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Conclusiones -->
+    <!-- Interpretación de resultados -->
+    <div id="interpDinamica" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem;margin-bottom:1.2rem">
+      <p style="font-weight:700;color:var(--accent);font-size:.95rem;margin-bottom:.5rem">📊 Interpretación de los Resultados</p>
+      <p style="font-size:.875rem;color:var(--text-muted);text-align:center;padding:.8rem 0">
+        ▶ Configura los parámetros y ejecuta la simulación para ver la interpretación con los valores reales.
+      </p>
+    </div>
+
+    <p class="form-label" style="margin-bottom:.6rem">Conclusiones Principales</p>
+    <ol style="font-size:.875rem;color:var(--text-secondary);padding-left:1.4rem;line-height:2">
+      <li>El modelo <strong>dR/dt = E − C₀(1 + αt)</strong> captura correctamente el fenómeno de vaciado acelerado: cuando α > 0 (pánico de compra), el consumo crece con el tiempo y la reserva colapsa más rápido de lo esperado si se usa un modelo lineal simple.</li>
+      <li>El <strong>método de Euler es insuficiente</strong> para predicciones de crisis de reservas: su error se acumula y puede estimar el tiempo crítico con 1–3 días de desfase, lo que representa un riesgo grave para la planificación de emergencia.</li>
+      <li><strong>Heun duplica la precisión de Euler</strong> con solo un cálculo adicional de f por paso; es una mejora costo-efectiva cuando los recursos computacionales son limitados.</li>
+      <li><strong>RK4 es el estándar de referencia:</strong> con cuatro evaluaciones de f por paso, su error es cuatro órdenes de magnitud menor que Euler. Para simulaciones de reservas de carburante, h = 0.5 días con RK4 es más que suficiente.</li>
+      <li>La <strong>solución analítica exacta</strong> existe para este modelo y sirve como referencia de validación. Que los métodos numéricos la reproduzcan confirma que el modelo matemático es consistente.</li>
+      <li>El tiempo crítico t* puede estimarse con precisión sub-diaria usando RK4 e interpolación lineal entre pasos, lo que permite activar planes de contingencia con suficiente anticipación.</li>
+      <li>Aumentar la tasa de entrada E o reducir α (medidas de control de demanda) son las únicas variables de política pública que pueden retrasar o evitar el vaciado, según muestra el modelo.</li>
+    </ol>
+
+    <div class="alert success" style="margin-top:1rem">
+      <span class="aicon">✅</span>
+      <span><strong>Recomendación final:</strong> Usar <strong>RK4 con paso h ≤ 1 día</strong> para todas las predicciones
+      de vaciado de reservas en contextos de crisis. Nunca usar Euler para horizontes superiores a 15 días si la
+      decisión de activar planes de emergencia depende del tiempo crítico calculado.</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p><strong>Escenario B · Ecuaciones Diferenciales Ordinarias</strong></p>
+  <p style="margin-top:.4rem">Métodos: Euler · Heun · Runge-Kutta 4° Orden</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/escenario-b.js"></script>
+<script>
+  document.getElementById('hamBtn').addEventListener('click', () =>
+    document.getElementById('navMenu').classList.toggle('open'));
+
+  function mostrarTab(btn, id) {
+    btn.closest('.card').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.closest('.card').querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+</script>
+</body>
+</html>

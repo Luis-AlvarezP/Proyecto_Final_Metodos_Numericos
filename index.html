@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulación Numérica — Crisis de Abastecimiento</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ════════════════ NAVBAR ════════════════ -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <div class="brand-icon">🧮</div>
+      <span>MétodosNum</span>
+    </a>
+    <button class="hamburger" id="hamBtn" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html" class="active">Inicio</a></li>
+      <li><a href="escenario-a.html">A · Abastecimiento</a></li>
+      <li><a href="escenario-b.html">B · Reservas</a></li>
+      <li><a href="escenario-c.html">C · Precios</a></li>
+      <li><a href="escenario-d.html">D <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-e.html">E <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-f.html">F <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-g.html">G <span class="badge-dev">DEV</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ════════════════ HERO ════════════════ -->
+<header class="page-hero">
+  <div class="page-hero-content">
+    <div class="scenario-chip">🎓 Desafío Final · Métodos Numéricos</div>
+    <h1>Simulación Numérica de Abastecimiento,<br>Precios y Conflicto Social</h1>
+    <p class="lead">
+      Aplicación de métodos numéricos para modelar y analizar problemas reales
+      en contexto de crisis: distribución de carburantes, vaciado de reservas,
+      evolución de precios y dinámica social.
+    </p>
+  </div>
+</header>
+
+<!-- ════════════════ CONTEXT ════════════════ -->
+<main class="main">
+
+  <div class="context-section">
+    <h2>📋 Contexto del Proyecto</h2>
+    <p>
+      En el contexto actual que atraviesa el país, se observan problemas relacionados con el
+      <strong>abastecimiento de carburantes</strong>, transporte, alimentos,
+      <strong>incremento de precios</strong>, rumores de escasez, bloqueos,
+      <strong>conflictos sociales</strong> y pérdida del poder adquisitivo familiar.
+    </p>
+    <p>
+      Esta herramienta interactiva aplica los métodos numéricos aprendidos en la materia para
+      <strong>simular, analizar y visualizar</strong> distintos escenarios reales mediante
+      modelos matemáticos y computacionales. La matemática como motor para comprender la realidad.
+    </p>
+
+    <div class="grid g-3 mt-2">
+      <div class="stat-box">
+        <span class="stat-val" style="color:var(--primary-light)">5</span>
+        <span class="stat-lbl">Métodos Numéricos</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val" style="color:var(--accent)">7</span>
+        <span class="stat-lbl">Escenarios Modelados</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val" style="color:var(--success)">70</span>
+        <span class="stat-lbl">Puntos de Evaluación</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tabla de métodos ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-blue">📐</div>
+      <h2>Métodos Numéricos Aplicados</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Área</th>
+            <th>Métodos Implementados</th>
+            <th>Aplicación en el Proyecto</th>
+            <th>Escenario</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tnorm fw-bold" style="color:var(--info)">Sistemas de Ecuaciones Lineales</td>
+            <td class="tnorm">LU · Jacobi · Gauss-Seidel · SOR · Gradiente Conjugado</td>
+            <td class="tnorm">Distribución de abastecimiento y transporte</td>
+            <td class="tnorm"><span class="tag t-blue">A</span> <span class="tag t-cyan">F</span></td>
+          </tr>
+          <tr>
+            <td class="tnorm fw-bold" style="color:var(--danger)">Raíces de Ecuaciones</td>
+            <td class="tnorm">Bisección · Newton-Raphson · Secante</td>
+            <td class="tnorm">Puntos críticos, umbrales de equilibrio</td>
+            <td class="tnorm"><span class="tag t-red">E</span></td>
+          </tr>
+          <tr>
+            <td class="tnorm fw-bold" style="color:var(--accent)">Interpolación</td>
+            <td class="tnorm">Lagrange · Newton (DD) · Splines Cúbicos</td>
+            <td class="tnorm">Reconstrucción de curvas de precios</td>
+            <td class="tnorm"><span class="tag t-orange">C</span></td>
+          </tr>
+          <tr>
+            <td class="tnorm fw-bold" style="color:var(--success)">Integración Numérica</td>
+            <td class="tnorm">Trapecio · Simpson 1/3 · Simpson 3/8</td>
+            <td class="tnorm">Costo acumulado mensual, poder adquisitivo</td>
+            <td class="tnorm"><span class="tag t-purple">D</span></td>
+          </tr>
+          <tr>
+            <td class="tnorm fw-bold" style="color:var(--text-primary)">Ecuaciones Diferenciales</td>
+            <td class="tnorm">Euler · Heun · Runge-Kutta 4to Orden</td>
+            <td class="tnorm">Vaciado de reservas · Difusión social</td>
+            <td class="tnorm"><span class="tag t-green">B</span> <span class="tag t-pink">G</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Scenario Cards ── -->
+  <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:.5rem">Escenarios de Simulación</h2>
+  <p style="color:var(--text-secondary);font-size:.875rem;margin-bottom:.5rem">
+    Selecciona un escenario para acceder a la simulación interactiva.
+    Los escenarios A, B y C están completamente implementados.
+  </p>
+
+  <div class="sc-grid">
+
+    <!-- A -->
+    <a href="escenario-a.html" class="sc-card sa">
+      <div class="sc-head">
+        <div>
+          <h3>Escenario A</h3>
+          <h3 style="font-size:.82rem;font-weight:600;color:var(--text-secondary)">Optimización de Abastecimiento</h3>
+        </div>
+        <div class="sc-letter">A</div>
+      </div>
+      <p>Distribución de carburantes y alimentos desde plantas de acopio hacia zonas de la ciudad. Simula bloqueos de rutas y variaciones de demanda.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem">
+        <span class="tag t-blue">Jacobi</span>
+        <span class="tag t-blue">Gauss-Seidel</span>
+        <span class="tag t-blue">SOR</span>
+        <span class="tag t-blue">LU</span>
+        <span class="tag t-blue">Grad. Conjugado</span>
+      </div>
+      <div class="sc-status done">✔ Módulo Completo</div>
+    </a>
+
+    <!-- B -->
+    <a href="escenario-b.html" class="sc-card sb">
+      <div class="sc-head">
+        <div>
+          <h3>Escenario B</h3>
+          <h3 style="font-size:.82rem;font-weight:600;color:var(--text-secondary)">Vaciado Crítico de Reservas</h3>
+        </div>
+        <div class="sc-letter">B</div>
+      </div>
+      <p>Simulación del agotamiento de reservas de carburante cuando la demanda supera el reabastecimiento. Predice cuándo se alcanza el nivel crítico.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem">
+        <span class="tag t-green">Euler</span>
+        <span class="tag t-green">Heun</span>
+        <span class="tag t-green">Runge-Kutta 4</span>
+      </div>
+      <div class="sc-status done">✔ Módulo Completo</div>
+    </a>
+
+    <!-- C -->
+    <a href="escenario-c.html" class="sc-card sc">
+      <div class="sc-head">
+        <div>
+          <h3>Escenario C</h3>
+          <h3 style="font-size:.82rem;font-weight:600;color:var(--text-secondary)">Curva de Precios de Alimentos</h3>
+        </div>
+        <div class="sc-letter">C</div>
+      </div>
+      <p>Reconstrucción de la curva continua de precios a partir de datos dispersos por día o semana. Estima precios en días sin registro.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem">
+        <span class="tag t-orange">Lagrange</span>
+        <span class="tag t-orange">Newton DD</span>
+        <span class="tag t-orange">Splines Cúbicos</span>
+      </div>
+      <div class="sc-status done">✔ Módulo Completo</div>
+    </a>
+
+    <!-- D -->
+    <a href="escenario-d.html" class="sc-card sd">
+      <div class="sc-head">
+        <div>
+          <h3>Escenario D</h3>
+          <h3 style="font-size:.82rem;font-weight:600;color:var(--text-secondary)">Poder Adquisitivo Familiar</h3>
+        </div>
+        <div class="sc-letter">D</div>
+      </div>
+      <p>Cálculo del gasto acumulado familiar durante un mes cuando los precios de la canasta básica aumentan progresivamente.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem">
+        <span class="tag t-purple">Trapecio</span>
+        <span class="tag t-purple">Simpson 1/3</span>
+        <span class="tag t-purple">Simpson 3/8</span>
+      </div>
+      <div class="sc-status dev">⚙ Módulo en Desarrollo</div>
+    </a>
+
+    <!-- E -->
+    <a href="escenario-e.html" class="sc-card se">
+      <div class="sc-head">
+        <div>
+          <h3>Escenario E</h3>
+          <h3 style="font-size:.82rem;font-weight:600;color:var(--text-secondary)">Umbrales Críticos</h3>
+        </div>
+        <div class="sc-letter">E</div>
+      </div>
+      <p>Determinación de puntos críticos donde el costo supera el ingreso, la demanda iguala el abastecimiento, o el modelo social cambia de régimen.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem">
+        <span class="tag t-red">Bisección</span>
+        <span class="tag t-red">Newton-Raphson</span>
+        <span class="tag t-red">Secante</span>
+      </div>
+      <div class="sc-status dev">⚙ Módulo en Desarrollo</div>
+    </a>
+
+    <!-- F -->
+    <a href="escenario-f.html" class="sc-card sf">
+      <div class="sc-head">
+        <div>
+          <h3>Escenario F</h3>
+          <h3 style="font-size:.82rem;font-weight:600;color:var(--text-secondary)">Rumores y Pánico</h3>
+        </div>
+        <div class="sc-letter">F</div>
+      </div>
+      <p>Modelado de sistemas mal condicionados para simular cómo pequeñas perturbaciones en la demanda generan grandes cambios en la distribución.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem">
+        <span class="tag t-cyan">Sistemas Lineales</span>
+        <span class="tag t-cyan">Núm. Condición</span>
+        <span class="tag t-cyan">Perturbación</span>
+      </div>
+      <div class="sc-status dev">⚙ Módulo en Desarrollo</div>
+    </a>
+
+    <!-- G -->
+    <a href="escenario-g.html" class="sc-card sg">
+      <div class="sc-head">
+        <div>
+          <h3>Escenario G</h3>
+          <h3 style="font-size:.82rem;font-weight:600;color:var(--text-secondary)">Difusión de Descontento Social</h3>
+        </div>
+        <div class="sc-letter">G</div>
+      </div>
+      <p>Modelo de dinámica social N-M-D: ciudadanos neutrales, manifestantes activos y mediadores. Simula la evolución del conflicto social.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem">
+        <span class="tag t-pink">Heun</span>
+        <span class="tag t-pink">Runge-Kutta 4</span>
+        <span class="tag t-pink">Sistema EDO</span>
+      </div>
+      <div class="sc-status dev">⚙ Módulo en Desarrollo</div>
+    </a>
+
+  </div>
+
+  <!-- ── Checklist ── -->
+  <div class="card mt-3">
+    <div class="card-header">
+      <div class="card-icon ci-green">✅</div>
+      <h2>Requisitos Cumplidos</h2>
+    </div>
+    <div class="grid g-3">
+      <div>
+        <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:.5rem;font-weight:700">CONTENIDO</p>
+        <ul class="questions-list">
+          <li>Título claro del proyecto</li>
+          <li>Contexto del problema real</li>
+          <li>Explicación del algoritmo utilizado</li>
+          <li>Interpretación de resultados</li>
+          <li>Conclusiones del modelo</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:.5rem;font-weight:700">FUNCIONALIDAD</p>
+        <ul class="questions-list">
+          <li>Formularios para ingresar datos</li>
+          <li>Botones para ejecutar cálculos</li>
+          <li>Resultados en pantalla</li>
+          <li>Tablas de iteraciones</li>
+          <li>Gráficos y visualizaciones (Chart.js)</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:.5rem;font-weight:700">TÉCNICO</p>
+        <ul class="questions-list">
+          <li>HTML · CSS · JavaScript separados</li>
+          <li>Diseño responsivo (mobile-first)</li>
+          <li>Sin dependencia de frameworks pesados</li>
+          <li>5 áreas de métodos numéricos</li>
+          <li>7 escenarios (3 completos + 4 en dev)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CONCLUSIONES GENERALES ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-green">🎯</div>
+      <h2>Conclusiones Generales del Proyecto</h2>
+    </div>
+
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1.2rem">
+      Este proyecto demuestra cómo los métodos numéricos de la ingeniería y las ciencias exactas
+      pueden aplicarse directamente a problemas reales de alta complejidad social, como la crisis
+      de desabastecimiento y conflicto. Los siete escenarios forman una cadena causal coherente
+      que va desde la distribución logística hasta la dinámica del conflicto social.
+    </p>
+
+    <div class="grid g-2" style="margin-bottom:1.5rem">
+      <div class="rpanel success">
+        <p style="font-weight:700;color:#6ee7b7;margin-bottom:.6rem">Escenarios Implementados (A · B · C)</p>
+        <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.9">
+          <li><strong style="color:#fff">A — Sistemas Lineales:</strong> LU garantiza la asignación óptima de recursos. Gauss-Seidel y SOR convergen con robustez para matrices de distribución diagonalmente dominantes.</li>
+          <li><strong style="color:#fff">B — EDOs (Reservas):</strong> RK4 predice el tiempo crítico de vaciado con error < 0.01%; Euler resulta insuficiente para horizontes de 20–30 días en escenarios de pánico.</li>
+          <li><strong style="color:#fff">C — Interpolación (Precios):</strong> Los Splines Cúbicos reproducen la evolución real de precios sin oscilaciones. Newton DD es preferible para datos incrementales de campo.</li>
+        </ul>
+      </div>
+      <div class="rpanel warning">
+        <p style="font-weight:700;color:#fcd34d;margin-bottom:.6rem">Escenarios en Desarrollo (D · E · F · G)</p>
+        <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.9">
+          <li><strong style="color:#fff">D — Integración:</strong> Simpson 1/3 cuantificará el gasto acumulado familiar con error O(h⁴), enlazando directamente con los precios del Escenario C.</li>
+          <li><strong style="color:#fff">E — Raíces:</strong> Newton-Raphson determinará el umbral de reabastecimiento E* con convergencia cuadrática.</li>
+          <li><strong style="color:#fff">F — Condicionamiento:</strong> κ(A) medirá la vulnerabilidad de la red de distribución ante rumores y datos imprecisos.</li>
+          <li><strong style="color:#fff">G — Sistema N-M-D:</strong> RK4 vectorial simulará la escalada del conflicto social e identificará el umbral N* de intervención.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="form-label" style="margin-bottom:.6rem">Conclusiones Transversales del Proyecto</p>
+    <ol style="font-size:.875rem;color:var(--text-secondary);padding-left:1.4rem;line-height:2.1">
+      <li>Los <strong>métodos numéricos de alto orden</strong> (RK4, Splines, LU con pivoteo) producen soluciones más confiables y son la base para la toma de decisiones de emergencia: un error de predicción de un día en el vaciado de reservas puede tener consecuencias graves sobre la población.</li>
+      <li>La <strong>comparación simultánea de métodos</strong> es fundamental en la práctica: ningún método es universalmente superior. La elección depende de la estructura del problema (tipo de matriz, suavidad de la función, disponibilidad de datos).</li>
+      <li>Los siete escenarios forman una <strong>cadena analítica integrada</strong>: el desabastecimiento físico (A, B) se traduce en distorsión de precios (C), pérdida económica familiar (D), búsqueda de equilibrio (E), fragilidad del sistema de información (F) y, finalmente, conflicto social (G).</li>
+      <li>La <strong>validación cruzada</strong> —comparar resultados numéricos con la solución analítica exacta (Escenario B) y con múltiples métodos independientes (Escenarios A, C)— es la práctica que garantiza la confiabilidad de los modelos antes de usarlos en políticas públicas.</li>
+      <li>Este proyecto demuestra que las herramientas numéricas implementadas con tecnologías web estándar (HTML, CSS, JavaScript, Chart.js) pueden ser desplegadas sin infraestructura especializada, haciéndolas accesibles para equipos de respuesta de emergencia con equipamiento básico.</li>
+    </ol>
+
+    <div class="alert success" style="margin-top:1rem">
+      <span class="aicon">✅</span>
+      <span><strong>Aporte principal:</strong> Este simulador integra los cinco grandes temas de Métodos Numéricos
+      (sistemas lineales, EDOs, interpolación, integración, raíces) en un único problema real y coherente,
+      demostrando que la matemática computacional es una herramienta de política pública aplicable a contextos de crisis.</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer>
+  <p><strong>Desafío Final · Métodos Numéricos</strong></p>
+  <p style="margin-top:.4rem">Simulación numérica de abastecimiento, precios y conflicto social en contexto de crisis</p>
+  <p style="margin-top:.4rem">HTML · CSS · JavaScript · Chart.js</p>
+</footer>
+
+<script>
+  document.getElementById('hamBtn').addEventListener('click', () => {
+    document.getElementById('navMenu').classList.toggle('open');
+  });
+</script>
+</body>
+</html>

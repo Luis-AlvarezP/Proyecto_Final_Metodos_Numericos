@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escenario C — Curva de Precios de Alimentos</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand"><div class="brand-icon">🧮</div><span>MétodosNum</span></a>
+    <button class="hamburger" id="hamBtn"><span></span><span></span><span></span></button>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="escenario-a.html">A · Abastecimiento</a></li>
+      <li><a href="escenario-b.html">B · Reservas</a></li>
+      <li><a href="escenario-c.html" class="active">C · Precios</a></li>
+      <li><a href="escenario-d.html">D <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-e.html">E <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-f.html">F <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-g.html">G <span class="badge-dev">DEV</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="page-hero">
+  <div class="page-hero-content">
+    <div class="scenario-chip">🛒 Escenario C · Interpolación Numérica</div>
+    <h1>Desabastecimiento de Alimentos y Curva Continua de Precios</h1>
+    <p class="lead">
+      Reconstruye la curva de precios de productos básicos a partir de datos dispersos.
+      Estima precios en días sin registro y analiza tendencias durante la crisis.
+    </p>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ── CONTEXTO ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-orange">📋</div>
+      <h2>Contexto del Problema Real</h2>
+    </div>
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1rem">
+      En mercados afectados por crisis de abastecimiento, los precios se registran
+      <strong style="color:#fff">de forma irregular</strong>: algunos días no hay datos,
+      en otros el precio varía abruptamente. La interpolación permite
+      <strong style="color:var(--accent)">reconstruir la curva continua</strong>
+      de precios para analizar tendencias, detectar el momento de mayor inflación
+      y estimar el precio en cualquier día del período.
+    </p>
+    <div class="card" style="margin-bottom:0;background:var(--bg-surface)">
+      <p style="font-size:.82rem;font-weight:800;color:var(--text-secondary);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.05em">Definición de Variables</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Variable</th><th>Descripción</th><th>Unidad</th></tr></thead>
+          <tbody>
+            <tr><td class="var-name">xᵢ</td><td class="tnorm">Día de registro (nodo de interpolación)</td><td class="mono">Día del mes</td></tr>
+            <tr><td class="var-name">yᵢ = p(xᵢ)</td><td class="tnorm">Precio registrado en el día xᵢ</td><td class="mono">Bs (bolivianos)</td></tr>
+            <tr><td class="var-name">x*</td><td class="tnorm">Día de consulta (sin dato disponible)</td><td class="mono">Día del mes</td></tr>
+            <tr><td class="var-name">P(x*)</td><td class="tnorm">Precio interpolado en el día x*</td><td class="mono">Bs estimado</td></tr>
+            <tr><td class="var-name">Lᵢ(x)</td><td class="tnorm">Polinomios base de Lagrange</td><td class="mono">Adimensional</td></tr>
+            <tr><td class="var-name">f[xᵢ,...,xₙ]</td><td class="tnorm">Diferencias divididas de Newton</td><td class="mono">Bs/día^k</td></tr>
+            <tr><td class="var-name">Sᵢ(x)</td><td class="tnorm">Función spline cúbico en el intervalo i</td><td class="mono">Polinomio cúbico</td></tr>
+            <tr><td class="var-name">Mᵢ</td><td class="tnorm">Segunda derivada en el nodo i (momentos del spline)</td><td class="mono">Bs/día²</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DATOS Y CONFIGURACIÓN ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-orange">⚙</div>
+      <h2>Datos de Precios y Configuración</h2>
+    </div>
+
+    <div class="alert info" style="margin-bottom:1rem">
+      <span class="aicon">ℹ</span>
+      <span>Se ejecutan los <strong>3 métodos simultáneamente</strong>: Lagrange, Newton (Diferencias Divididas)
+      y Splines Cúbicos. Cada uno muestra su tabla de proceso completa.</span>
+    </div>
+    <!-- Producto -->
+    <div class="form-group" style="max-width:340px">
+      <label class="form-label">Producto a analizar</label>
+      <select class="form-control" id="producto" onchange="cambiarProducto()">
+        <option value="papa">Papa (Bs/kg)</option>
+        <option value="arroz">Arroz (Bs/kg)</option>
+        <option value="carne">Carne de res (Bs/kg)</option>
+        <option value="gasolina">Gasolina (Bs/lt)</option>
+        <option value="personalizado">Personalizado</option>
+      </select>
+    </div>
+
+    <!-- Tabla de datos editable -->
+    <p class="form-label">Tabla de datos dispersos (editable)</p>
+    <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:.7rem">
+      Ingresa los días y precios registrados. Agrega o elimina filas según necesites (mín. 3, máx. 10 puntos).
+    </p>
+
+    <div id="tablaDatosWrapper">
+      <div class="table-wrap">
+        <table id="tablaDatos">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Día xᵢ (1–30)</th>
+              <th>Precio yᵢ (Bs)</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="datosBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="btn-group mt-2 mb-2">
+      <button class="btn btn-outline" onclick="agregarFila()">+ Agregar punto</button>
+      <button class="btn btn-outline" onclick="cambiarProducto()">↺ Restablecer datos del producto</button>
+    </div>
+
+    <hr class="sep">
+
+    <!-- Consulta -->
+    <div class="row c2">
+      <div class="form-group">
+        <label class="form-label">Día a consultar x* <span class="req">*</span></label>
+        <input type="number" class="form-control" id="xConsulta" value="12" min="1" max="30" step="1">
+        <p style="font-size:.72rem;color:var(--text-muted)">El precio en este día será estimado por interpolación</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rango del gráfico</label>
+        <div class="row c2">
+          <input type="number" class="form-control" id="xMin" value="1" placeholder="Inicio">
+          <input type="number" class="form-control" id="xMax" value="30" placeholder="Fin">
+        </div>
+      </div>
+    </div>
+
+    <hr class="sep">
+    <div class="btn-group">
+      <button class="btn btn-primary btn-lg" onclick="ejecutarInterpolacion()">▶ Interpolar y Graficar</button>
+      <button class="btn btn-outline" onclick="limpiarResultados()">↺ Reiniciar</button>
+    </div>
+  </div>
+
+  <!-- ── RESULTADOS ── -->
+  <div id="resultadosSection" class="hidden">
+
+    <div id="alertInterp" style="margin-bottom:.5rem"></div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon ci-orange">📊</div>
+        <h2>Resumen Comparativo — Los 3 Métodos</h2>
+      </div>
+
+      <!-- KPIs -->
+      <div class="stats-grid" id="kpis"></div>
+
+      <!-- Gráfico con los 3 métodos superpuestos -->
+      <p class="chart-title mt-2">📈 Curva de Precios — Todos los Métodos</p>
+      <div class="chart-box tall">
+        <canvas id="chartPrecios"></canvas>
+      </div>
+
+      <!-- Comparación de estimaciones en x* -->
+      <hr class="sep">
+      <p class="form-label">Estimaciones en el día x* — Comparación</p>
+      <div class="table-wrap" id="tablaComp"></div>
+
+      <!-- Interpretación -->
+      <div class="interpretation" id="interpretacion"></div>
+    </div>
+
+    <!-- Tabs con proceso detallado por método -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon ci-blue">🔢</div>
+        <h2>Proceso de Resolución por Método</h2>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:.8rem">
+        Cada pestaña muestra el proceso interno completo del método: tablas de coeficientes, polinomios base y pasos de evaluación en x*.
+      </p>
+      <div class="tabs" id="methodTabsNav"></div>
+      <div id="methodTabsContent" style="margin-top:.5rem"></div>
+    </div>
+
+  </div>
+
+  <!-- ── ALGORITMOS ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-purple">📖</div>
+      <h2>Explicación de los Algoritmos de Interpolación</h2>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="mostrarTab(this,'tLag')">Lagrange</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tNewt')">Newton DD</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tSpl')">Splines Cúbicos</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tDiff')">Diferencias</button>
+    </div>
+
+    <!-- Lagrange -->
+    <div class="tab-pane active" id="tLag">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        El polinomio de Lagrange interpola exactamente los n+1 puntos dados.
+        Cada punto tiene su propio polinomio base Lᵢ(x) que vale 1 en xᵢ y 0 en todos los demás nodos.
+      </p>
+      <div class="formula">
+        P(x) = Σᵢ yᵢ · Lᵢ(x)  donde  Lᵢ(x) = Πⱼ≠ᵢ (x−xⱼ)/(xᵢ−xⱼ)
+      </div>
+      <div class="algo"><span class="cm">── Evaluación del Polinomio de Lagrange ──</span>
+resultado = 0
+<span class="kw">para</span> i = 0..n:
+    Li = 1                       <span class="cm">← base para el punto i</span>
+    <span class="kw">para</span> j = 0..n (j ≠ i):
+        Li *= (x − xⱼ) / (xᵢ − xⱼ)
+    resultado += yᵢ · Li
+<span class="kw">retornar</span> resultado           <span class="cm">← = P(x*)</span></div>
+      <div class="alert warning mt-1">
+        <span class="aicon">⚠</span>
+        <span>Con muchos puntos (n &gt; 7), el polinomio de Lagrange puede producir oscilaciones
+        numéricas entre nodos (Fenómeno de Runge). Splines cúbicos son más estables para datos dispersos.</span>
+      </div>
+    </div>
+
+    <!-- Newton -->
+    <div class="tab-pane" id="tNewt">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        La interpolación de Newton usa diferencias divididas para construir el polinomio de forma incremental.
+        Agregar un nuevo punto solo requiere calcular una nueva diferencia.
+      </p>
+      <div class="formula">
+        P(x) = f[x₀] + f[x₀,x₁]·(x−x₀) + f[x₀,x₁,x₂]·(x−x₀)(x−x₁) + ...
+      </div>
+      <div class="algo"><span class="cm">── Tabla de Diferencias Divididas ──</span>
+f[xᵢ] = yᵢ                        <span class="cm">← orden 0</span>
+f[xᵢ,xᵢ₊₁] = (f[xᵢ₊₁]−f[xᵢ]) / (xᵢ₊₁−xᵢ)    <span class="cm">← orden 1</span>
+f[xᵢ,...,xᵢ₊ₖ] = (f[xᵢ₊₁,...,xᵢ₊ₖ] − f[xᵢ,...,xᵢ₊ₖ₋₁]) / (xᵢ₊ₖ−xᵢ)
+
+<span class="cm">── Evaluación en x* (método de Horner) ──</span>
+P(x*) = coefs[n]
+<span class="kw">para</span> i = n-1..0:
+    P(x*) = coefs[i] + P(x*)·(x*−xᵢ)</div>
+    </div>
+
+    <!-- Splines -->
+    <div class="tab-pane" id="tSpl">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        Los splines cúbicos naturales garantizan continuidad de la función y sus dos primeras derivadas en cada nodo.
+        Producen curvas suaves sin oscilaciones y son ideales para datos de precios.
+      </p>
+      <div class="formula">
+        Sᵢ(x) = aᵢ + bᵢ(x−xᵢ) + cᵢ(x−xᵢ)² + dᵢ(x−xᵢ)³  para x ∈ [xᵢ, xᵢ₊₁]
+      </div>
+      <div class="algo"><span class="cm">── Spline Cúbico Natural (condición: M₀ = Mₙ = 0) ──</span>
+<span class="cm">1. Calcular hᵢ = xᵢ₊₁ − xᵢ</span>
+<span class="cm">2. Resolver sistema tridiagonal para Mᵢ (segundas derivadas):</span>
+   hᵢMᵢ + 2(hᵢ+hᵢ₊₁)Mᵢ₊₁ + hᵢ₊₁Mᵢ₊₂ = 6·[(yᵢ₊₂−yᵢ₊₁)/hᵢ₊₁ − (yᵢ₊₁−yᵢ)/hᵢ]
+   → Algoritmo de Thomas (tridiagonal)
+
+<span class="cm">3. Calcular coeficientes de cada segmento:</span>
+   aᵢ = yᵢ
+   bᵢ = (yᵢ₊₁−yᵢ)/hᵢ − hᵢ·(2Mᵢ+Mᵢ₊₁)/6
+   cᵢ = Mᵢ/2
+   dᵢ = (Mᵢ₊₁−Mᵢ)/(6hᵢ)
+
+<span class="cm">4. Evaluar en x*: encontrar intervalo [xᵢ,xᵢ₊₁] → Sᵢ(x*)</span></div>
+      <div class="alert success mt-1">
+        <span class="aicon">✅</span>
+        <span>Los splines cúbicos son la mejor opción para series de precios: evitan oscilaciones
+        de Runge y producen curvas naturalmente suaves.</span>
+      </div>
+    </div>
+
+    <!-- Diferencias entre métodos -->
+    <div class="tab-pane" id="tDiff">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Característica</th><th>Lagrange</th><th>Newton DD</th><th>Splines Cúbicos</th></tr></thead>
+          <tbody>
+            <tr><td class="tnorm">Tipo de función</td><td>Polinomio global</td><td>Polinomio global</td><td>Polinomios por tramos</td></tr>
+            <tr><td class="tnorm">Grado máximo</td><td>n (todos los puntos)</td><td>n (todos los puntos)</td><td>3 (por intervalo)</td></tr>
+            <tr><td class="tnorm">Oscilaciones</td><td class="err">Posibles (Runge)</td><td class="err">Posibles (Runge)</td><td class="ok">No (suaves)</td></tr>
+            <tr><td class="tnorm">Agregar puntos</td><td class="err">Recalcular todo</td><td class="ok">Incremental</td><td class="err">Recalcular todo</td></tr>
+            <tr><td class="tnorm">Continuidad</td><td>C∞ (polinomio)</td><td>C∞ (polinomio)</td><td class="ok">C² en nodos</td></tr>
+            <tr><td class="tnorm">Costo computacional</td><td>O(n²)</td><td>O(n²)</td><td>O(n)</td></tr>
+            <tr><td class="tnorm">Mejor para</td><td>Pocos puntos</td><td>Datos incrementales</td><td class="ok">Series de precios</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PREGUNTAS ── -->
+  <div class="card">
+    <div class="card-header"><div class="card-icon ci-orange">❓</div><h2>Preguntas que Responde la Simulación</h2></div>
+    <ul class="questions-list">
+      <li>¿Cuál sería el precio aproximado en el día 12, del que no hay registro?</li>
+      <li>¿Cómo se comporta la curva de precios durante el mes de crisis?</li>
+      <li>¿Qué producto básico tuvo el mayor incremento porcentual?</li>
+      <li>¿Qué tan confiable es la interpolación cuando los datos son muy dispersos?</li>
+      <li>¿Qué método produce una curva más suave y realista?</li>
+    </ul>
+  </div>
+
+  <!-- ── CONCLUSIONES ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-green">🎯</div>
+      <h2>Conclusiones del Escenario C</h2>
+    </div>
+
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1.2rem">
+      La interpolación numérica permite reconstruir la curva continua de precios de productos
+      básicos a partir de registros discontinuos, facilitando el análisis de la inflación
+      durante períodos de desabastecimiento. Los tres métodos aplicados evidencian fortalezas
+      y limitaciones distintas según el tipo de datos disponibles.
+    </p>
+
+    <!-- Comparativa -->
+    <div class="grid g-2" style="margin-bottom:1.2rem">
+      <div class="rpanel info">
+        <p style="font-weight:700;color:#93c5fd;margin-bottom:.5rem">Lagrange vs. Newton (Diferencias Divididas)</p>
+        <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.8">
+          <li>Ambos construyen el mismo polinomio interpolante de grado n−1; la diferencia es solo algebraica.</li>
+          <li>Newton es computacionalmente más eficiente: agregar un nuevo punto de precio solo requiere calcular una nueva columna en la tabla de diferencias divididas.</li>
+          <li>Con más de 6 puntos ambos pueden presentar el <strong style="color:#fcd34d">fenómeno de Runge</strong>: oscilaciones espurias entre nodos que no corresponden a ningún precio real.</li>
+        </ul>
+      </div>
+      <div class="rpanel success">
+        <p style="font-weight:700;color:#6ee7b7;margin-bottom:.5rem">Splines Cúbicos Naturales</p>
+        <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.8">
+          <li>Garantizan continuidad C² en todos los nodos: la función, su derivada y su segunda derivada son continuas.</li>
+          <li>Producen curvas visualmente suaves que respetan mejor el comportamiento real de los precios.</li>
+          <li>El costo computacional es O(n) mediante el algoritmo de Thomas, significativamente más eficiente que los métodos globales O(n²).</li>
+          <li>Son la herramienta óptima para reconstruir series de precios con tendencia monótona.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Conclusiones -->
+    <!-- Interpretación de resultados -->
+    <div id="interpDinamica" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem;margin-bottom:1.2rem">
+      <p style="font-weight:700;color:var(--accent);font-size:.95rem;margin-bottom:.5rem">📊 Interpretación de los Resultados</p>
+      <p style="font-size:.875rem;color:var(--text-muted);text-align:center;padding:.8rem 0">
+        ▶ Selecciona un producto e ingresa un día de consulta para ver la interpretación con los valores reales.
+      </p>
+    </div>
+
+    <p class="form-label" style="margin-bottom:.6rem">Conclusiones Principales</p>
+    <ol style="font-size:.875rem;color:var(--text-secondary);padding-left:1.4rem;line-height:2">
+      <li>Los tres métodos <strong>interpolaron correctamente</strong> los puntos de datos conocidos (error = 0 en los nodos), confirmando la solidez de los algoritmos implementados.</li>
+      <li>Para pocos puntos (n ≤ 5), Lagrange y Newton ofrecen resultados equivalentes a los splines con menor esfuerzo de implementación; son útiles para estimaciones rápidas de campo.</li>
+      <li>A medida que aumentan los puntos de datos registrados (n > 6), los <strong>splines cúbicos se vuelven claramente superiores</strong>: eliminan las oscilaciones de Runge y producen una curva de precios más realista y confiable.</li>
+      <li>La diferencia numérica entre Lagrange y Newton es del orden de <strong>10⁻¹⁰ a 10⁻¹²</strong> (errores de redondeo de punto flotante), confirmando que son algebraicamente idénticos.</li>
+      <li>La <strong>extrapolación fuera del rango de datos</strong> es riesgosa con cualquier método: los precios fuera del período registrado pueden ser subvalorados o sobrestimados significativamente.</li>
+      <li>Los momentos Mᵢ de los splines revelan las zonas de mayor tensión en la curva de precios: valores |Mᵢ| grandes indican <strong>cambios bruscos de precio</strong>, indicadores de posibles puntos de desabastecimiento agudo.</li>
+      <li>La reconstrucción continua de la curva de precios permite calcular indicadores derivados: inflación diaria (primera derivada), aceleración del precio (segunda derivada) y gasto acumulado (integral, enlaza con el Escenario D).</li>
+    </ol>
+
+    <div class="alert success" style="margin-top:1rem">
+      <span class="aicon">✅</span>
+      <span><strong>Recomendación final:</strong> Para monitoreo de precios durante crisis de abastecimiento,
+      usar <strong>Splines Cúbicos Naturales</strong> con registros cada 2–5 días.
+      Newton DD es preferible cuando los datos se registran de forma incremental (un producto nuevo por día)
+      ya que no requiere recalcular toda la tabla.</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p><strong>Escenario C · Interpolación Numérica</strong></p>
+  <p style="margin-top:.4rem">Métodos: Lagrange · Newton (DD) · Splines Cúbicos Naturales</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/escenario-c.js"></script>
+<script>
+  document.getElementById('hamBtn').addEventListener('click', () =>
+    document.getElementById('navMenu').classList.toggle('open'));
+
+  function mostrarTab(btn, id) {
+    btn.closest('.card').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.closest('.card').querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+
+  // Iniciar con datos de papa
+  cambiarProducto();
+</script>
+</body>
+</html>

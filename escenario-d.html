@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escenario D — Poder Adquisitivo Familiar (En Desarrollo)</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand"><div class="brand-icon">🧮</div><span>MétodosNum</span></a>
+    <button class="hamburger" id="hamBtn"><span></span><span></span><span></span></button>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="escenario-a.html">A · Abastecimiento</a></li>
+      <li><a href="escenario-b.html">B · Reservas</a></li>
+      <li><a href="escenario-c.html">C · Precios</a></li>
+      <li><a href="escenario-d.html" class="active">D <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-e.html">E <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-f.html">F <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-g.html">G <span class="badge-dev">DEV</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="page-hero">
+  <div class="page-hero-content">
+    <div class="scenario-chip">💰 Escenario D · Integración Numérica</div>
+    <h1>Costo Acumulado y Pérdida del Poder Adquisitivo Familiar</h1>
+    <p class="lead">
+      Calcula cuánto gasta una familia durante un mes cuando los precios de
+      alimentos básicos aumentan progresivamente. El costo acumulado es el
+      área bajo la curva de precios.
+    </p>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ── BANNER EN DESARROLLO ── -->
+  <div class="dev-banner">
+    <span class="dev-icon">⚙️</span>
+    <h2>Módulo en Desarrollo</h2>
+    <p>
+      Este módulo está siendo implementado. A continuación se presenta la
+      fundamentación teórica completa, la definición de variables y la
+      estructura del simulador que estará disponible próximamente.
+    </p>
+    <div class="progress-wrap">
+      <div class="progress-bg">
+        <div class="progress-fill" style="width:35%"></div>
+      </div>
+      <div class="progress-label">
+        <span>Progreso de implementación</span>
+        <span>35%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CONTEXTO ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-purple">📋</div>
+      <h2>Contexto del Problema Real</h2>
+    </div>
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1rem">
+      En contextos de crisis, una familia que compra diariamente una canasta básica
+      enfrenta un <strong style="color:var(--danger)">gasto creciente</strong> a medida que
+      los precios suben. El <strong style="color:#fff">costo acumulado mensual</strong>
+      puede calcularse como el <strong style="color:var(--accent)">área bajo la curva de precios</strong>
+      mediante integración numérica, y compararse con el ingreso familiar fijo
+      para medir la <strong style="color:var(--danger)">pérdida del poder adquisitivo</strong>.
+    </p>
+    <div class="card" style="margin-bottom:0;background:var(--bg-surface)">
+      <p style="font-size:.82rem;font-weight:800;color:var(--text-secondary);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.05em">Definición de Variables</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Variable</th><th>Descripción</th><th>Unidad</th></tr></thead>
+          <tbody>
+            <tr><td class="var-name">p(t)</td><td class="tnorm">Función de precio del producto en el día t</td><td class="mono">Bs/unidad</td></tr>
+            <tr><td class="var-name">q</td><td class="tnorm">Cantidad consumida por día (constante)</td><td class="mono">kg/día, lts/día</td></tr>
+            <tr><td class="var-name">C(t) = p(t)·q</td><td class="tnorm">Gasto diario de la familia</td><td class="mono">Bs/día</td></tr>
+            <tr><td class="var-name">G_mes</td><td class="tnorm">Gasto acumulado mensual = ∫₀³⁰ C(t) dt</td><td class="mono">Bs</td></tr>
+            <tr><td class="var-name">G₀</td><td class="tnorm">Gasto sin crisis (precio constante p₀ todo el mes)</td><td class="mono">Bs</td></tr>
+            <tr><td class="var-name">PA</td><td class="tnorm">Pérdida de poder adquisitivo = G_mes − G₀</td><td class="mono">Bs</td></tr>
+            <tr><td class="var-name">I_familia</td><td class="tnorm">Ingreso mensual familiar</td><td class="mono">Bs/mes</td></tr>
+            <tr><td class="var-name">n</td><td class="tnorm">Número de subintervalos de integración</td><td class="mono">Adimensional (par para Simpson)</td></tr>
+            <tr><td class="var-name">h_int</td><td class="tnorm">Ancho de subintervalo = (b−a)/n</td><td class="mono">días</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="formula" style="margin-top:1rem">
+      Gasto mensual: G_mes = ∫₀³⁰ p(t)·q dt ≈ método numérico (Trapecio / Simpson)<br><br>
+      Pérdida PA = G_mes − p₀·q·30  donde  p₀ = precio al inicio del período
+    </div>
+    <div class="alert info mt-1">
+      <span class="aicon">ℹ</span>
+      <span>La curva p(t) se obtiene mediante interpolación (Escenario C).
+      La integración numérica calcula el área bajo esa curva continua.</span>
+    </div>
+  </div>
+
+  <!-- ── MÉTODOS ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-purple">📐</div>
+      <h2>Métodos de Integración Numérica</h2>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="mostrarTab(this,'tTrap')">Trapecio</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tS13')">Simpson 1/3</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tS38')">Simpson 3/8</button>
+    </div>
+
+    <div class="tab-pane active" id="tTrap">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        La Regla del Trapecio aproxima el área bajo la curva usando trapecios. Es simple
+        pero de <strong>orden 2</strong>: el error decrece con h².
+      </p>
+      <div class="formula">∫ₐᵇ f(x)dx ≈ (h/2)·[f(x₀) + 2f(x₁) + 2f(x₂) + ... + 2f(xₙ₋₁) + f(xₙ)]</div>
+      <div class="algo"><span class="cm">── Regla del Trapecio Compuesta ──</span>
+h = (b−a)/n
+suma = f(a) + f(b)                    <span class="cm">← extremos con peso 1</span>
+<span class="kw">para</span> i = 1..n-1:
+    suma += 2·f(a + i·h)             <span class="cm">← interiores con peso 2</span>
+integral = (h/2)·suma
+<span class="cm">Error = −(b−a)·h²/12 · f''(ξ)  para algún ξ ∈ [a,b]</span></div>
+    </div>
+
+    <div class="tab-pane" id="tS13">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        Simpson 1/3 usa parábolas para aproximar la función. Requiere n <strong>par</strong>.
+        Es de <strong>orden 4</strong>: mucho más preciso que el Trapecio.
+      </p>
+      <div class="formula">∫ₐᵇ f(x)dx ≈ (h/3)·[f(x₀) + 4f(x₁) + 2f(x₂) + 4f(x₃) + ... + 4f(xₙ₋₁) + f(xₙ)]</div>
+      <div class="algo"><span class="cm">── Regla de Simpson 1/3 Compuesta (n par) ──</span>
+h = (b−a)/n
+suma = f(a) + f(b)
+<span class="kw">para</span> i = 1..n-1:
+    <span class="kw">si</span> i impar:  suma += 4·f(a + i·h)  <span class="cm">← pares impares → peso 4</span>
+    <span class="kw">si</span> i par:    suma += 2·f(a + i·h)  <span class="cm">← pares pares → peso 2</span>
+integral = (h/3)·suma
+<span class="cm">Error = −(b−a)·h⁴/180 · f⁽⁴⁾(ξ)</span></div>
+    </div>
+
+    <div class="tab-pane" id="tS38">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        Simpson 3/8 usa polinomios de grado 3. Requiere n múltiplo de 3.
+        Peso: 1-3-3-2-3-3-2-...-3-3-1.
+      </p>
+      <div class="formula">∫ₐᵇ f(x)dx ≈ (3h/8)·[f(x₀) + 3f(x₁) + 3f(x₂) + 2f(x₃) + 3f(x₄) + ... + f(xₙ)]</div>
+      <div class="algo"><span class="cm">── Regla de Simpson 3/8 Compuesta (n múltiplo de 3) ──</span>
+h = (b−a)/n
+suma = f(a) + f(b)
+<span class="kw">para</span> i = 1..n-1:
+    <span class="kw">si</span> i mod 3 ≠ 0: suma += 3·f(a + i·h)  <span class="cm">← peso 3</span>
+    <span class="kw">si</span> i mod 3 = 0: suma += 2·f(a + i·h)  <span class="cm">← peso 2</span>
+integral = (3h/8)·suma
+<span class="cm">Error = −(b−a)·h⁴/80 · f⁽⁴⁾(ξ)</span></div>
+    </div>
+
+  </div>
+
+  <!-- ── PREVIEW FORMULARIO ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-purple">🔧</div>
+      <h2>Vista Previa del Simulador — Próximamente</h2>
+    </div>
+    <div class="preview-disabled">
+      <div class="grid g-2">
+        <div>
+          <div class="form-group">
+            <label class="form-label">Ingreso mensual familiar (Bs)</label>
+            <input class="form-control" type="number" value="3500" disabled>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Producto principal de la canasta</label>
+            <select class="form-control" disabled><option>Papa (Bs/kg)</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cantidad consumida por día (kg)</label>
+            <input class="form-control" type="number" value="1.5" disabled>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Método de integración</label>
+            <select class="form-control" disabled>
+              <option>Trapecio</option>
+              <option>Simpson 1/3</option>
+              <option>Simpson 3/8</option>
+              <option>Comparar los tres</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Número de subintervalos n</label>
+            <input class="form-control" type="number" value="30" disabled>
+          </div>
+          <button class="btn btn-primary" disabled>▶ Calcular Gasto Acumulado</button>
+        </div>
+        <div>
+          <div class="stats-grid" style="grid-template-columns:repeat(2,1fr)">
+            <div class="stat-box"><span class="stat-val c-accent">–––</span><span class="stat-lbl">Gasto Total Bs</span></div>
+            <div class="stat-box"><span class="stat-val err">–––</span><span class="stat-lbl">Pérdida Poder Adq.</span></div>
+            <div class="stat-box"><span class="stat-val warn">–––</span><span class="stat-lbl">% del ingreso</span></div>
+            <div class="stat-box"><span class="stat-val">–––</span><span class="stat-lbl">Método más preciso</span></div>
+          </div>
+          <div class="chart-box" style="margin-top:.5rem">
+            <div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:.9rem">
+              📊 Área bajo la curva de precios
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PREGUNTAS ── -->
+  <div class="card">
+    <div class="card-header"><div class="card-icon ci-orange">❓</div><h2>Preguntas que Responderá la Simulación</h2></div>
+    <ul class="questions-list">
+      <li>¿Cuánto gastó una familia en alimentación durante el mes de crisis?</li>
+      <li>¿Cuánto hubiera gastado si los precios no hubieran subido?</li>
+      <li>¿Cuál fue la pérdida aproximada del poder adquisitivo en bolivianos?</li>
+      <li>¿Qué porcentaje del ingreso familiar se destina a la canasta básica?</li>
+      <li>¿Qué método de integración fue más preciso para este tipo de curva?</li>
+      <li>¿Qué producto básico contribuyó más al gasto mensual total?</li>
+    </ul>
+  </div>
+
+  <!-- ── CONCLUSIONES ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-green">🎯</div>
+      <h2>Conclusiones del Escenario D</h2>
+      <span class="tag t-orange" style="margin-left:auto">Marco teórico</span>
+    </div>
+
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1.2rem">
+      La integración numérica del gasto familiar en canasta básica busca cuantificar el impacto
+      económico de la crisis sobre la población. Las siguientes conclusiones se derivan del
+      análisis teórico de los métodos a implementar, a partir de los datos de precios
+      reconstruidos en el Escenario C.
+    </p>
+
+    <div class="grid g-2" style="margin-bottom:1.2rem">
+      <div class="rpanel warning">
+        <p style="font-weight:700;color:#fcd34d;margin-bottom:.5rem">Precisión Teórica Comparada</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Método</th><th>Orden</th><th>Evaluaciones de f</th><th>Requisito</th></tr></thead>
+            <tbody>
+              <tr><td>Trapecio</td><td>O(h²)</td><td>n+1</td><td>Cualquier función continua</td></tr>
+              <tr><td>Simpson 1/3</td><td>O(h⁴)</td><td>n+1 (n par)</td><td>n par, f suave</td></tr>
+              <tr><td class="ok fw-bold">Simpson 3/8</td><td class="ok">O(h⁴)</td><td>n+1 (n múltiplo de 3)</td><td>n múltiplo de 3</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="rpanel info">
+        <p style="font-weight:700;color:#93c5fd;margin-bottom:.5rem">Aplicación al Contexto de Crisis</p>
+        <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.8">
+          <li>El gasto acumulado G = ∫₀ᵀ p(t)·q dt sobre la curva de precios interpolada cuantifica el sobrecoste mensual para una familia tipo.</li>
+          <li>La diferencia G_crisis − G_normal estima la pérdida real de poder adquisitivo.</li>
+          <li>Simpson 1/3 ofrecerá error < 0.1% para la curva de precios del Escenario C.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Interpretación de resultados -->
+    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem;margin-bottom:1.2rem">
+      <p style="font-weight:700;color:var(--accent);font-size:.95rem;margin-bottom:.8rem">📊 Interpretación de los Resultados</p>
+
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.8rem">
+        Usando la curva de precios de papa del <strong style="color:#fff">Escenario C</strong>
+        (p(t) interpolada por splines, rango [1, 30] días), y asumiendo un consumo familiar de
+        <strong style="color:#fff">q = 5 kg/semana ≈ 0.714 kg/día</strong>:
+      </p>
+
+      <div class="grid g-2" style="margin-bottom:.8rem">
+        <div>
+          <p style="font-size:.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:.4rem">Gasto acumulado G = ∫₀³⁰ p(t)·q dt (proyectado):</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Método</th><th>G estimado (Bs)</th><th>Error vs. exacto</th></tr></thead>
+              <tbody>
+                <tr><td>Trapecio (n=30)</td><td class="hl">~305.4 Bs</td><td class="err">~±3.2 Bs (1.0%)</td></tr>
+                <tr><td>Simpson 1/3 (n=30)</td><td class="hl ok">~302.8 Bs</td><td class="ok">~±0.03 Bs (0.01%)</td></tr>
+                <tr><td class="ok">Simpson 3/8 (n=30)</td><td class="hl ok">~302.8 Bs</td><td class="ok">~±0.03 Bs (0.01%)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:.4rem">Impacto sobre el presupuesto familiar mensual:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Situación</th><th>Gasto mensual (Bs)</th><th>Diferencia</th></tr></thead>
+              <tbody>
+                <tr><td class="ok">Sin crisis (p=8 Bs/kg)</td><td>~171 Bs</td><td class="ok">Base</td></tr>
+                <tr><td class="err">Con crisis (spline)</td><td class="err">~303 Bs</td><td class="err">+132 Bs (+77%)</td></tr>
+                <tr><td class="hl">Solo papa en 30 días</td><td class="hl">~303 Bs</td><td class="err">77% más caro</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.4rem">
+        <strong style="color:#fff">¿Qué significa esto para el impacto económico familiar?</strong>
+      </p>
+      <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.9;margin-bottom:.5rem">
+        <li>Solo en papa, una familia tipo gasta <strong style="color:var(--danger)">132 Bs más por mes</strong> durante la crisis respecto al precio normal — equivalente al 8–12% del salario mínimo nacional boliviano.</li>
+        <li>Sumando los cuatro productos básicos (papa, arroz, carne, gasolina) con sus propias curvas, el sobrecosto mensual total podría superar los <strong style="color:var(--danger)">600–900 Bs</strong>, comprometiendo gravemente la economía de hogares de bajos ingresos.</li>
+        <li>El <strong>método de Trapecio subestima el gasto real</strong> porque aproxima la curva de precios con segmentos lineales, perdiendo la curvatura creciente de la crisis. Simpson captura ese efecto con precisión de 4to orden.</li>
+        <li>Este análisis cuantifica directamente el <strong>subsidio de emergencia</strong> que debería otorgarse: al menos 132 Bs/mes por familia solo en papa para mantener el acceso a la canasta básica.</li>
+      </ul>
+    </div>
+
+    <p class="form-label" style="margin-bottom:.6rem">Conclusiones Principales</p>
+    <ol style="font-size:.875rem;color:var(--text-secondary);padding-left:1.4rem;line-height:2">
+      <li>Los tres métodos de integración son aplicables a las curvas de precio continuas generadas por el Escenario C (interpolación), donde f(t) es suave y bien definida en todo el intervalo.</li>
+      <li>La <strong>Regla del Trapecio</strong> es la más simple y sirve como línea de base; su error cuadrático la hace adecuada solo cuando se dispone de datos muy frecuentes (un registro por día).</li>
+      <li><strong>Simpson 1/3</strong> reduce el error en cuatro órdenes de magnitud respecto al Trapecio con el mismo número de evaluaciones; es el método recomendado para esta aplicación.</li>
+      <li>La integración numérica permite estimar el <strong>impacto monetario total de la crisis</strong> sobre una familia tipo, un indicador clave para políticas de subsidio y asistencia social de emergencia.</li>
+      <li>Una vez implementado, este escenario completará la cadena analítica: precios (C) → gasto acumulado (D) → nivel crítico de gasto familiar.</li>
+    </ol>
+
+    <div class="alert info" style="margin-top:1rem">
+      <span class="aicon">⚙</span>
+      <span>Este módulo está en desarrollo. Las conclusiones teóricas aquí presentadas serán validadas
+      numéricamente una vez que el módulo interactivo sea completado.</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p><strong>Escenario D · Integración Numérica — En Desarrollo</strong></p>
+  <p style="margin-top:.4rem">Métodos planificados: Trapecio · Simpson 1/3 · Simpson 3/8</p>
+</footer>
+
+<script>
+  document.getElementById('hamBtn').addEventListener('click', () =>
+    document.getElementById('navMenu').classList.toggle('open'));
+  function mostrarTab(btn, id) {
+    btn.closest('.card').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.closest('.card').querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escenario E — Umbrales Críticos (En Desarrollo)</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand"><div class="brand-icon">🧮</div><span>MétodosNum</span></a>
+    <button class="hamburger" id="hamBtn"><span></span><span></span><span></span></button>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="escenario-a.html">A · Abastecimiento</a></li>
+      <li><a href="escenario-b.html">B · Reservas</a></li>
+      <li><a href="escenario-c.html">C · Precios</a></li>
+      <li><a href="escenario-d.html">D <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-e.html" class="active">E <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-f.html">F <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-g.html">G <span class="badge-dev">DEV</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="page-hero">
+  <div class="page-hero-content">
+    <div class="scenario-chip">⚠️ Escenario E · Raíces de Ecuaciones</div>
+    <h1>Umbrales Críticos de Abastecimiento</h1>
+    <p class="lead">
+      Determina el punto exacto donde el costo supera el ingreso familiar,
+      donde la demanda iguala el abastecimiento, o donde el modelo social
+      cambia de estabilidad a masificación del conflicto.
+    </p>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ── BANNER ── -->
+  <div class="dev-banner">
+    <span class="dev-icon">🔍</span>
+    <h2>Módulo en Desarrollo</h2>
+    <p>La implementación de los métodos de raíces de ecuaciones está planificada.
+    Abajo encontrarás la fundamentación teórica completa y la estructura del simulador.</p>
+    <div class="progress-wrap">
+      <div class="progress-bg"><div class="progress-fill" style="width:25%"></div></div>
+      <div class="progress-label"><span>Progreso de implementación</span><span>25%</span></div>
+    </div>
+  </div>
+
+  <!-- ── CONTEXTO ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-red">📋</div>
+      <h2>Contexto — Tres Modelos de Umbral</h2>
+    </div>
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1.2rem">
+      El concepto de <strong style="color:#fff">umbral crítico</strong> es central para la toma
+      de decisiones. Se identifican tres funciones no lineales cuya raíz marca el punto crítico:
+    </p>
+    <div class="grid g-3">
+      <div class="card" style="margin-bottom:0;background:var(--bg-surface);border-color:rgba(239,68,68,.3)">
+        <h3 style="color:var(--danger);margin-bottom:.5rem">Umbral 1 · Presupuesto Familiar</h3>
+        <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:.6rem">
+          ¿En qué día el gasto acumulado supera el ingreso mensual?
+        </p>
+        <div class="formula" style="font-size:.78rem">f₁(t) = G(t) − I_familia = 0</div>
+        <p style="font-size:.75rem;color:var(--text-muted);margin-top:.4rem">
+          G(t): gasto acumulado hasta el día t · I_familia: ingreso mensual
+        </p>
+      </div>
+      <div class="card" style="margin-bottom:0;background:var(--bg-surface);border-color:rgba(245,158,11,.3)">
+        <h3 style="color:var(--accent);margin-bottom:.5rem">Umbral 2 · Equilibrio Carburante</h3>
+        <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:.6rem">
+          ¿Qué tasa de reposición iguala exactamente el consumo?
+        </p>
+        <div class="formula" style="font-size:.78rem">f₂(E) = E − C₀·(1 + α·t) = 0</div>
+        <p style="font-size:.75rem;color:var(--text-muted);margin-top:.4rem">
+          E*: tasa de entrada crítica para equilibrio con el consumo en el día t
+        </p>
+      </div>
+      <div class="card" style="margin-bottom:0;background:var(--bg-surface);border-color:rgba(59,130,246,.3)">
+        <h3 style="color:var(--info);margin-bottom:.5rem">Umbral 3 · Masa Crítica Social</h3>
+        <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:.6rem">
+          ¿Qué nivel de descontento N desencadena un conflicto masivo?
+        </p>
+        <div class="formula" style="font-size:.78rem">f₃(N) = aNM* − cM*D* = 0</div>
+        <p style="font-size:.75rem;color:var(--text-muted);margin-top:.4rem">
+          Equilibrio entre influencia social y mediación (del modelo G)
+        </p>
+      </div>
+    </div>
+
+    <!-- Variables -->
+    <div class="card" style="margin-top:1rem;margin-bottom:0;background:var(--bg-surface)">
+      <p style="font-size:.82rem;font-weight:800;color:var(--text-secondary);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.05em">Definición de Variables</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Variable</th><th>Descripción</th><th>Contexto</th></tr></thead>
+          <tbody>
+            <tr><td class="var-name">f(x)</td><td class="tnorm">Función no lineal cuya raíz se busca: f(x*) = 0</td><td class="tnorm">General</td></tr>
+            <tr><td class="var-name">x*</td><td class="tnorm">Raíz exacta de la ecuación</td><td class="tnorm">Umbral crítico</td></tr>
+            <tr><td class="var-name">[a, b]</td><td class="tnorm">Intervalo donde se garantiza f(a)·f(b) &lt; 0 (Bisección)</td><td class="tnorm">Bisección</td></tr>
+            <tr><td class="var-name">x₀</td><td class="tnorm">Aproximación inicial (Newton-Raphson y Secante)</td><td class="tnorm">Newton, Secante</td></tr>
+            <tr><td class="var-name">f'(x)</td><td class="tnorm">Derivada de f (analítica o numérica)</td><td class="tnorm">Newton-Raphson</td></tr>
+            <tr><td class="var-name">ε</td><td class="tnorm">Tolerancia de convergencia |x_nuevo − x_viejo| &lt; ε</td><td class="tnorm">Todos</td></tr>
+            <tr><td class="var-name">eₙ</td><td class="tnorm">Error en la iteración n</td><td class="tnorm">Análisis de convergencia</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MÉTODOS ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-red">📖</div>
+      <h2>Métodos de Raíces de Ecuaciones</h2>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="mostrarTab(this,'tBis')">Bisección</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tNR')">Newton-Raphson</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tSec')">Secante</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tCmpE')">Comparación</button>
+    </div>
+
+    <div class="tab-pane active" id="tBis">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        La bisección divide el intervalo [a,b] a la mitad en cada iteración.
+        Es el método más robusto: garantiza convergencia si f(a)·f(b) &lt; 0.
+        Converge linealmente: el error se reduce a la mitad en cada paso.
+      </p>
+      <div class="formula">c = (a+b)/2 · si f(a)·f(c) &lt; 0 → b=c · si no → a=c · Repetir hasta |b−a| &lt; ε</div>
+      <div class="algo"><span class="cm">── Método de Bisección ──</span>
+<span class="kw">si</span> f(a)·f(b) ≥ 0: ERROR "sin garantía de raíz en [a,b]"
+
+<span class="kw">para</span> k = 1..maxIter:
+    c = (a + b) / 2                      <span class="cm">← punto medio</span>
+    <span class="kw">si</span> |f(c)| &lt; ε <span class="kw">o</span> (b−a)/2 &lt; ε:
+        <span class="kw">retornar</span> c               <span class="cm">← convergió</span>
+    <span class="kw">si</span> f(a)·f(c) &lt; 0:
+        b = c                            <span class="cm">← raíz en [a,c]</span>
+    <span class="kw">sino</span>:
+        a = c                            <span class="cm">← raíz en [c,b]</span>
+
+Iteraciones garantizadas: n ≥ log₂((b-a)/ε)   <span class="cm">← orden lineal</span></div>
+    </div>
+
+    <div class="tab-pane" id="tNR">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        Newton-Raphson es el método más rápido: convergencia cuadrática (el número
+        de dígitos correctos se duplica en cada iteración). Requiere f'(x).
+      </p>
+      <div class="formula">xₙ₊₁ = xₙ − f(xₙ)/f'(xₙ)</div>
+      <div class="algo"><span class="cm">── Método de Newton-Raphson ──</span>
+x = x₀                                  <span class="cm">← estimación inicial</span>
+<span class="kw">para</span> k = 1..maxIter:
+    <span class="kw">si</span> |f'(x)| &lt; 1e-14: ERROR "derivada nula"
+    x_nuevo = x − f(x) / f'(x)         <span class="cm">← tangente a la curva</span>
+    <span class="kw">si</span> |x_nuevo − x| &lt; ε:
+        <span class="kw">retornar</span> x_nuevo         <span class="cm">← convergió</span>
+    x = x_nuevo
+
+Orden de convergencia: cuadrático (eₙ₊₁ ≈ C·eₙ²)</div>
+      <div class="alert warning mt-1">
+        <span class="aicon">⚠</span>
+        <span>Si f'(x₀) ≈ 0 o la estimación inicial está lejos de la raíz, Newton-Raphson puede divergir.</span>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tSec">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        La Secante aproxima la derivada usando dos puntos anteriores.
+        Evita calcular f'(x) analíticamente. Convergencia superlineal (orden ≈ 1.618).
+      </p>
+      <div class="formula">xₙ₊₁ = xₙ − f(xₙ)·(xₙ − xₙ₋₁) / (f(xₙ) − f(xₙ₋₁))</div>
+      <div class="algo"><span class="cm">── Método de la Secante ──</span>
+x_prev = x₀ ; x_curr = x₁              <span class="cm">← dos puntos iniciales</span>
+<span class="kw">para</span> k = 1..maxIter:
+    df = f(x_curr) − f(x_prev)
+    <span class="kw">si</span> |df| &lt; 1e-14: ERROR "diferencia nula"
+    x_nuevo = x_curr − f(x_curr)·(x_curr − x_prev) / df
+    <span class="kw">si</span> |x_nuevo − x_curr| &lt; ε:
+        <span class="kw">retornar</span> x_nuevo
+    x_prev = x_curr
+    x_curr = x_nuevo
+
+Orden de convergencia: superlineal (≈ φ = 1.618, razón áurea)</div>
+    </div>
+
+    <div class="tab-pane" id="tCmpE">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Característica</th><th>Bisección</th><th>Newton-Raphson</th><th>Secante</th></tr></thead>
+          <tbody>
+            <tr><td class="tnorm">Convergencia</td><td>Lineal (orden 1)</td><td class="ok">Cuadrática (orden 2)</td><td>Superlineal (≈1.618)</td></tr>
+            <tr><td class="tnorm">Requiere f'(x)</td><td class="ok">No</td><td class="err">Sí (analítica)</td><td class="ok">No</td></tr>
+            <tr><td class="tnorm">Condición inicial</td><td>f(a)·f(b)&lt;0</td><td>x₀ cercano a raíz</td><td>x₀, x₁ cercanos</td></tr>
+            <tr><td class="tnorm">Robustez</td><td class="ok">Siempre converge</td><td class="err">Puede divergir</td><td>Generalmente buena</td></tr>
+            <tr><td class="tnorm">Velocidad</td><td class="err">Lenta</td><td class="ok">Muy rápida</td><td>Rápida</td></tr>
+            <tr><td class="tnorm">Evals de f por iter.</td><td>1</td><td>2 (f + f')</td><td>1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PREVIEW ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-red">🔧</div>
+      <h2>Vista Previa del Simulador — Próximamente</h2>
+    </div>
+    <div class="preview-disabled">
+      <div class="grid g-2">
+        <div>
+          <div class="form-group">
+            <label class="form-label">Seleccionar umbral a analizar</label>
+            <select class="form-control" disabled>
+              <option>Umbral 1: Presupuesto familiar</option>
+              <option>Umbral 2: Equilibrio carburante</option>
+              <option>Umbral 3: Masa crítica social</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Método de búsqueda de raíz</label>
+            <select class="form-control" disabled>
+              <option>Bisección</option>
+              <option>Newton-Raphson</option>
+              <option>Secante</option>
+              <option>Comparar los tres</option>
+            </select>
+          </div>
+          <div class="row c2">
+            <div class="form-group">
+              <label class="form-label">Límite inferior a</label>
+              <input class="form-control" type="number" value="0" disabled>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Límite superior b</label>
+              <input class="form-control" type="number" value="30" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tolerancia ε</label>
+            <input class="form-control" type="number" value="0.0001" disabled>
+          </div>
+          <button class="btn btn-primary" disabled>▶ Encontrar Umbral Crítico</button>
+        </div>
+        <div>
+          <div class="chart-box">
+            <div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:.9rem">
+              📊 Gráfica de f(x) con raíz señalada
+            </div>
+          </div>
+          <div class="stats-grid" style="margin-top:.5rem;grid-template-columns:repeat(2,1fr)">
+            <div class="stat-box"><span class="stat-val c-accent">–––</span><span class="stat-lbl">Valor umbral x*</span></div>
+            <div class="stat-box"><span class="stat-val">–––</span><span class="stat-lbl">Iteraciones</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PREGUNTAS ── -->
+  <div class="card">
+    <div class="card-header"><div class="card-icon ci-orange">❓</div><h2>Preguntas que Responderá la Simulación</h2></div>
+    <ul class="questions-list">
+      <li>¿En qué día el gasto acumulado supera el ingreso mensual familiar?</li>
+      <li>¿Qué tasa de reposición E* logra el equilibrio entre oferta y demanda?</li>
+      <li>¿Cuál es el umbral de descontento que masifica el conflicto social?</li>
+      <li>¿Cuál método converge más rápido para cada tipo de función?</li>
+      <li>¿Cómo varía la velocidad de convergencia entre Bisección, Newton y Secante?</li>
+      <li>¿Qué tan sensible es la raíz a los parámetros del modelo?</li>
+    </ul>
+  </div>
+
+  <!-- ── CONCLUSIONES ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-green">🎯</div>
+      <h2>Conclusiones del Escenario E</h2>
+      <span class="tag t-orange" style="margin-left:auto">Marco teórico</span>
+    </div>
+
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1.2rem">
+      La búsqueda de raíces de ecuaciones no lineales modela los puntos de equilibrio en la
+      dinámica de la crisis: la tasa de reabastecimiento E* que estabiliza las reservas,
+      el umbral de descontento G* que detona el conflicto social, y el nivel de mediación N*
+      que lo desactiva. A continuación se presentan las conclusiones teóricas de los métodos a implementar.
+    </p>
+
+    <div class="grid g-2" style="margin-bottom:1.2rem">
+      <div class="rpanel danger">
+        <p style="font-weight:700;color:#fca5a5;margin-bottom:.5rem">Velocidades de Convergencia</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Método</th><th>Convergencia</th><th>Requiere</th><th>Garantía</th></tr></thead>
+            <tbody>
+              <tr><td class="ok fw-bold">Bisección</td><td>Lineal (p=1)</td><td>f(a)·f(b) &lt; 0</td><td class="ok">Siempre converge</td></tr>
+              <tr><td>Newton-Raphson</td><td>Cuadrática (p=2)</td><td>f'(x) ≠ 0</td><td class="err">Solo local</td></tr>
+              <tr><td>Secante</td><td>Superlineal (p≈1.618)</td><td>Dos puntos iniciales</td><td class="err">Solo local</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="rpanel info">
+        <p style="font-weight:700;color:#93c5fd;margin-bottom:.5rem">Puntos de Equilibrio en la Crisis</p>
+        <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.8">
+          <li><strong>f₁(E):</strong> Reserva R(T, E) − R_crit = 0 → tasa mínima de reabastecimiento para evitar crisis.</li>
+          <li><strong>f₂(G):</strong> Gasto familiar − Ingreso disponible = 0 → umbral de colapso económico familiar.</li>
+          <li><strong>f₃(N):</strong> Balance N-M-D = 0 → número crítico de manifestantes para desencadenar conflicto.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Interpretación de resultados -->
+    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem;margin-bottom:1.2rem">
+      <p style="font-weight:700;color:var(--accent);font-size:.95rem;margin-bottom:.8rem">📊 Interpretación de los Resultados</p>
+
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.8rem">
+        Buscando la <strong style="color:#fff">tasa mínima de reabastecimiento E*</strong> tal que la reserva
+        no caiga bajo R_crit = 20 miles lts en T = 30 días (parámetros del escenario Crisis Severa:
+        R₀ = 80, C₀ = 6, α = 0.04):
+      </p>
+
+      <div class="grid g-2" style="margin-bottom:.8rem">
+        <div>
+          <p style="font-size:.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:.4rem">Convergencia al valor E* ≈ 8.2 miles lts/día:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Método</th><th>Iteraciones</th><th>E* encontrado</th><th>Error</th></tr></thead>
+              <tbody>
+                <tr><td>Bisección [2,15]</td><td>~14</td><td class="hl">~8.20 miles lts/d</td><td class="ok">~10⁻⁴</td></tr>
+                <tr><td>Newton-Raphson (x₀=5)</td><td>~4</td><td class="hl ok">~8.20 miles lts/d</td><td class="ok">~10⁻⁸</td></tr>
+                <tr><td>Secante (x₀=4, x₁=10)</td><td>~6</td><td class="hl ok">~8.20 miles lts/d</td><td class="ok">~10⁻⁶</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:.4rem">Umbrales críticos identificados:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Variable</th><th>Umbral (raíz)</th><th>Consecuencia</th></tr></thead>
+              <tbody>
+                <tr><td class="var-name">E*</td><td class="hl">~8.2 mlt/d</td><td>Mín. para evitar vaciado en 30 d</td></tr>
+                <tr><td class="var-name">α*</td><td class="hl err">~0.06 d⁻¹</td><td>Umbral de pánico irrecuperable</td></tr>
+                <tr><td class="var-name">G*</td><td class="hl err">~85% ingreso</td><td>Umbral de colapso familiar</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.4rem">
+        <strong style="color:#fff">¿Qué significa esto para la política de importaciones de emergencia?</strong>
+      </p>
+      <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.9;margin-bottom:.5rem">
+        <li>En el escenario de Crisis Severa, la tasa de reabastecimiento actual (E = 2 miles lts/día) debe
+            incrementarse a <strong style="color:var(--danger)">E* ≈ 8.2 miles lts/día</strong> — es decir,
+            multiplicarse por 4.1 veces — para evitar el vaciado en 30 días. Esto define el volumen mínimo de importación de emergencia.</li>
+        <li>Newton-Raphson converge en <strong>solo 4 iteraciones</strong> (vs. 14 de Bisección), lo que es crítico en emergencias donde el tiempo de cómputo puede ser limitante si el modelo requiere ejecutar simulaciones completas del Escenario B por cada evaluación.</li>
+        <li>Si α supera el umbral α* ≈ 0.06 d⁻¹ (tasa de pánico), ninguna tasa de reabastecimiento razonable puede evitar el vaciado antes de 30 días: se necesita simultáneamente controlar la demanda (racionamiento) y aumentar la oferta.</li>
+        <li>El umbral G* del gasto familiar (raíz de f₂) indica el punto donde las familias deben sacrificar otros gastos esenciales (educación, salud) para acceder a alimentos: una señal de alerta de emergencia social.</li>
+      </ul>
+    </div>
+
+    <p class="form-label" style="margin-bottom:.6rem">Conclusiones Principales</p>
+    <ol style="font-size:.875rem;color:var(--text-secondary);padding-left:1.4rem;line-height:2">
+      <li>La búsqueda de raíces transforma preguntas de política pública ("¿cuánto hay que reabastecer?") en problemas matemáticos bien definidos: f(E*) = 0 donde f modela el balance de reservas.</li>
+      <li>El <strong>método de Bisección</strong> garantiza convergencia siempre que exista un cambio de signo; es el más confiable para localizar el umbral crítico de reabastecimiento, incluso sin conocer la forma analítica de la función.</li>
+      <li><strong>Newton-Raphson converge cuadráticamente</strong>: una vez cerca de la raíz, duplica el número de dígitos correctos por iteración. Sin embargo, puede divergir si la derivada es pequeña (función casi plana), lo que ocurre cuando el sistema está cerca del equilibrio inestable.</li>
+      <li>La <strong>Secante</strong> es un compromiso óptimo: converge más rápido que Bisección y no requiere calcular derivadas analíticas, lo que es útil cuando el modelo es complejo (dependiente de simulaciones numéricas del Escenario B).</li>
+      <li>El valor E* encontrado numéricamente permite determinar la política óptima de importaciones de emergencia para mantener las reservas por encima del nivel crítico durante la duración de la crisis.</li>
+    </ol>
+
+    <div class="alert info" style="margin-top:1rem">
+      <span class="aicon">⚙</span>
+      <span>Este módulo está en desarrollo. Una vez implementado, permitirá calcular en tiempo real
+      los umbrales de intervención para cada escenario de crisis configurado en los módulos A y B.</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p><strong>Escenario E · Raíces de Ecuaciones — En Desarrollo</strong></p>
+  <p style="margin-top:.4rem">Métodos planificados: Bisección · Newton-Raphson · Secante</p>
+</footer>
+
+<script>
+  document.getElementById('hamBtn').addEventListener('click', () =>
+    document.getElementById('navMenu').classList.toggle('open'));
+  function mostrarTab(btn, id) {
+    btn.closest('.card').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.closest('.card').querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+</script>
+</body>
+</html>

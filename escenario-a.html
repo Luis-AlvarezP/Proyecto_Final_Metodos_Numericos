@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escenario A — Optimización de Abastecimiento</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <div class="brand-icon">🧮</div><span>MétodosNum</span>
+    </a>
+    <button class="hamburger" id="hamBtn"><span></span><span></span><span></span></button>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="escenario-a.html" class="active">A · Abastecimiento</a></li>
+      <li><a href="escenario-b.html">B · Reservas</a></li>
+      <li><a href="escenario-c.html">C · Precios</a></li>
+      <li><a href="escenario-d.html">D <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-e.html">E <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-f.html">F <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-g.html">G <span class="badge-dev">DEV</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="page-hero">
+  <div class="page-hero-content">
+    <div class="scenario-chip">📦 Escenario A · Sistemas de Ecuaciones Lineales</div>
+    <h1>Optimización de la Red de Abastecimiento y Transporte</h1>
+    <p class="lead">
+      Simula cómo distribuir carburantes y alimentos desde plantas de acopio
+      hacia distintas zonas de la ciudad. Compara cinco métodos numéricos.
+    </p>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ── CONTEXTO ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-blue">📋</div>
+      <h2>Contexto del Problema Real</h2>
+    </div>
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1rem">
+      En situaciones de crisis, la distribución de productos esenciales (carburante, alimentos,
+      medicamentos) debe optimizarse considerando la <strong style="color:#fff">capacidad de cada planta</strong>,
+      la <strong style="color:#fff">demanda de cada zona</strong> y posibles
+      <strong style="color:var(--danger)">bloqueos de rutas</strong>. El sistema de ecuaciones
+      lineales modela exactamente estas restricciones de balance y flujo.
+    </p>
+
+    <!-- Variables -->
+    <div class="card" style="margin-bottom:0;background:var(--bg-surface)">
+      <p style="font-size:.82rem;font-weight:800;color:var(--text-secondary);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.05em">
+        Definición de Variables
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Variable</th><th>Descripción</th><th>Unidad</th><th>Restricción</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="var-name">xᵢⱼ</td>
+              <td class="tnorm">Cantidad enviada de Planta i a Zona j</td>
+              <td class="mono">Miles de litros / Toneladas</td>
+              <td class="mono c-success">xᵢⱼ ≥ 0</td>
+            </tr>
+            <tr>
+              <td class="var-name">aᵢⱼ</td>
+              <td class="tnorm">Coeficiente de distribución (fracción o costo por unidad)</td>
+              <td class="mono">Bs/km, fracción</td>
+              <td class="mono">Definido por rutas</td>
+            </tr>
+            <tr>
+              <td class="var-name">bᵢ</td>
+              <td class="tnorm">Demanda mínima de la zona i (lado derecho del sistema)</td>
+              <td class="mono">Miles de litros</td>
+              <td class="mono c-accent">bᵢ > 0</td>
+            </tr>
+            <tr>
+              <td class="var-name">ω</td>
+              <td class="tnorm">Factor de relajación (solo para método SOR)</td>
+              <td class="mono">Adimensional</td>
+              <td class="mono">0 &lt; ω &lt; 2</td>
+            </tr>
+            <tr>
+              <td class="var-name">ε</td>
+              <td class="tnorm">Tolerancia de convergencia para métodos iterativos</td>
+              <td class="mono">Adimensional</td>
+              <td class="mono">ε > 0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="formula" style="margin-top:1rem">
+      Sistema: <strong>A · x = b</strong><br>
+      donde A ∈ ℝⁿˣⁿ (matriz de coeficientes), x ∈ ℝⁿ (incógnitas), b ∈ ℝⁿ (demandas)
+    </div>
+
+    <div class="alert info" style="margin-top:.5rem">
+      <span class="aicon">💡</span>
+      <span>Para garantizar convergencia en Jacobi, Gauss-Seidel y SOR, la matriz <strong>A</strong>
+      debe ser <em>diagonalmente dominante</em>: |aᵢᵢ| > Σⱼ≠ᵢ |aᵢⱼ| para toda fila i.</span>
+    </div>
+  </div>
+
+  <!-- ── CONFIGURACIÓN ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-blue">⚙</div>
+      <h2>Configuración del Sistema</h2>
+    </div>
+
+    <!-- Tamaño + parámetros -->
+    <div class="alert info" style="margin-bottom:1rem">
+      <span class="aicon">ℹ</span>
+      <span>Al ejecutar se corren <strong>los 5 métodos simultáneamente</strong>: Jacobi, Gauss-Seidel, SOR, Descomposición LU y Gradiente Conjugado. Cada uno mostrará su tabla de iteraciones completa.</span>
+    </div>
+    <div class="grid g-2">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Tamaño del sistema (n×n)</label>
+          <select class="form-control" id="matSize">
+            <option value="2">2×2 · (2 plantas, 2 zonas)</option>
+            <option value="3" selected>3×3 · (3 plantas, 3 zonas)</option>
+            <option value="4">4×4 · (4 plantas, 4 zonas)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Factor de relajación ω (SOR)</label>
+          <input type="number" class="form-control" id="omega" value="1.25" step="0.05" min="0.1" max="1.99">
+          <p style="font-size:.75rem;color:var(--text-muted);margin-top:.3rem">ω = 1 → Gauss-Seidel · ω ∈ (1,2) → sobre-relajación</p>
+        </div>
+      </div>
+      <div>
+        <div class="row c2">
+          <div class="form-group">
+            <label class="form-label">Tolerancia ε</label>
+            <input type="number" class="form-control" id="tol" value="0.0001" step="0.00001" min="1e-10">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Máx. iteraciones</label>
+            <input type="number" class="form-control" id="maxIter" value="100" min="1" max="1000">
+          </div>
+        </div>
+        <div class="alert success" style="margin-top:.5rem;font-size:.82rem">
+          <span class="aicon">✅</span>
+          <span>LU (Doolittle) es el método directo: siempre da solución exacta, sin iteraciones.
+          Los demás iteran hasta ε o hasta maxIter.</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="sep">
+
+    <!-- Botones de ejemplo / limpiar -->
+    <div class="btn-group mb-2">
+      <button class="btn btn-outline" onclick="cargarEjemploBolivia()">📋 Cargar Escenario Bolivia</button>
+      <button class="btn btn-outline" onclick="cargarEjemploBloqueo()">🚧 Simular Bloqueo de Ruta</button>
+      <button class="btn btn-outline" onclick="limpiarMatriz()">🗑 Limpiar</button>
+    </div>
+
+    <!-- Matriz A -->
+    <p class="form-label">Matriz de coeficientes A</p>
+    <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:.6rem">
+      Cada fila representa una restricción de balance. Cada columna, una variable (zona destino).
+    </p>
+    <div class="matrix-wrap">
+      <div id="matrizA" class="matrix-grid"></div>
+    </div>
+
+    <hr class="sep">
+
+    <!-- Vector b -->
+    <p class="form-label" style="margin-top:0">Vector de demandas b (lado derecho)</p>
+    <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:.6rem">
+      Demanda mínima de cada zona en miles de litros (o toneladas según el producto).
+    </p>
+    <div class="matrix-wrap">
+      <div id="vectorB" class="matrix-grid" style="grid-template-columns: repeat(1, 1fr)"></div>
+    </div>
+
+    <hr class="sep">
+    <div class="btn-group">
+      <button class="btn btn-primary btn-lg" onclick="ejecutarCalculo()">
+        ▶ Ejecutar Simulación
+      </button>
+      <button class="btn btn-outline" onclick="limpiarResultados()">↺ Reiniciar</button>
+    </div>
+  </div>
+
+  <!-- ── RESULTADOS ── -->
+  <div id="resultadosSection" class="hidden">
+
+    <!-- Alertas globales -->
+    <div id="alertGlobal" style="margin-bottom:.5rem"></div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon ci-green">📊</div>
+        <h2>Resumen Comparativo — Los 5 Métodos</h2>
+      </div>
+
+      <!-- Tabla comparativa de todos los métodos -->
+      <div class="table-wrap" id="tablaResumen"></div>
+
+      <!-- Gráficos -->
+      <div class="grid g-2 mt-2">
+        <div>
+          <p class="chart-title">📦 Distribución por Zona (todos los métodos)</p>
+          <div class="chart-box">
+            <canvas id="chartDistrib"></canvas>
+          </div>
+        </div>
+        <div>
+          <p class="chart-title">📉 Convergencia comparada (log-escala)</p>
+          <div class="chart-box">
+            <canvas id="chartConv"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interpretación -->
+      <div class="interpretation" id="interpretacion"></div>
+    </div>
+
+    <!-- Tabs con resolución completa por método -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon ci-blue">🔢</div>
+        <h2>Resolución Completa por Método</h2>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:.8rem">
+        Selecciona el método para ver su tabla de iteraciones completa, matrices y proceso de resolución.
+      </p>
+
+      <div class="tabs" id="methodTabsNav"></div>
+      <div id="methodTabsContent" style="margin-top:.5rem"></div>
+    </div>
+
+  </div>
+
+  <!-- ── ALGORITMO ── -->
+  <div class="card mt-3">
+    <div class="card-header">
+      <div class="card-icon ci-purple">📖</div>
+      <h2>Explicación de los Algoritmos</h2>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="mostrarTab(this,'tJacobi')">Jacobi</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tGS')">Gauss-Seidel</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tSOR')">SOR</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tLU')">LU</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tGC')">Grad. Conjugado</button>
+    </div>
+
+    <!-- Jacobi -->
+    <div class="tab-pane active" id="tJacobi">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        El método de Jacobi calcula cada componente de la nueva iteración
+        usando <strong>exclusivamente</strong> los valores de la iteración anterior.
+        Requiere que la diagonal sea dominante para garantizar convergencia.
+      </p>
+      <div class="formula">
+        xᵢ⁽ᵏ⁺¹⁾ = (bᵢ − Σⱼ≠ᵢ aᵢⱼ · xⱼ⁽ᵏ⁾) / aᵢᵢ
+      </div>
+      <div class="algo"><span class="kw">para</span> k = 0, 1, 2, ..., maxIter:
+    <span class="kw">para</span> i = 0 ..n-1:
+        suma = bᵢ
+        <span class="kw">para</span> j = 0 ..n-1 (j≠i):
+            suma -= aᵢⱼ · x_viejo[j]    <span class="cm">← solo valores de iteración k</span>
+        x_nuevo[i] = suma / aᵢᵢ
+    error = max|x_nuevo − x_viejo|
+    <span class="kw">si</span> error &lt; ε: <span class="kw">terminar</span>  ✓ convergió</div>
+      <div class="alert warning mt-1">
+        <span class="aicon">⚠</span>
+        <span>Jacobi puede ser más lento que Gauss-Seidel. Converge si la matriz es estrictamente diagonalmente dominante.</span>
+      </div>
+    </div>
+
+    <!-- Gauss-Seidel -->
+    <div class="tab-pane" id="tGS">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        Similar a Jacobi, pero usa inmediatamente los valores actualizados de la
+        misma iteración. Generalmente converge en la mitad de iteraciones.
+      </p>
+      <div class="formula">
+        xᵢ⁽ᵏ⁺¹⁾ = (bᵢ − Σⱼ&lt;ᵢ aᵢⱼ · xⱼ⁽ᵏ⁺¹⁾ − Σⱼ&gt;ᵢ aᵢⱼ · xⱼ⁽ᵏ⁾) / aᵢᵢ
+      </div>
+      <div class="algo"><span class="kw">para</span> k = 0, 1, 2, ..., maxIter:
+    x_viejo = copia(x)
+    <span class="kw">para</span> i = 0 ..n-1:
+        suma = bᵢ
+        <span class="kw">para</span> j = 0 ..n-1 (j≠i):
+            suma -= aᵢⱼ · x[j]    <span class="cm">← usa el x actualizado inmediatamente</span>
+        x[i] = suma / aᵢᵢ
+    error = max|x − x_viejo|
+    <span class="kw">si</span> error &lt; ε: <span class="kw">terminar</span></div>
+    </div>
+
+    <!-- SOR -->
+    <div class="tab-pane" id="tSOR">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        SOR (Successive Over-Relaxation) acelera Gauss-Seidel mediante un factor
+        de relajación ω. Con ω óptimo puede reducir el número de iteraciones significativamente.
+      </p>
+      <div class="formula">
+        xᵢ⁽ᵏ⁺¹⁾ = (1−ω)·xᵢ⁽ᵏ⁾ + ω·(bᵢ − Σⱼ≠ᵢ aᵢⱼ·xⱼ) / aᵢᵢ
+      </div>
+      <div class="algo"><span class="kw">para</span> k = 0, 1, 2, ..., maxIter:
+    x_viejo = copia(x)
+    <span class="kw">para</span> i = 0 ..n-1:
+        gs = (bᵢ − Σⱼ≠ᵢ aᵢⱼ·x[j]) / aᵢᵢ    <span class="cm">← valor Gauss-Seidel</span>
+        x[i] = (1−ω)·x[i] + ω·gs           <span class="cm">← corrección con ω</span>
+    error = max|x − x_viejo|
+    <span class="kw">si</span> error &lt; ε: <span class="kw">terminar</span></div>
+    </div>
+
+    <!-- LU -->
+    <div class="tab-pane" id="tLU">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        La descomposición LU factoriza A = L·U donde L es triangular inferior y U superior.
+        Luego resuelve el sistema en dos etapas de sustitución directa.
+        Método <strong>directo</strong>: obtiene solución exacta (sin iteraciones).
+      </p>
+      <div class="formula">
+        A = L · U  →  L·y = b (sustitución ↓)  →  U·x = y (sustitución ↑)
+      </div>
+      <div class="algo"><span class="cm">── Fase 1: Factorización (Doolittle) ──</span>
+<span class="kw">para</span> i = 0..n-1:
+    U[i][k] = A[i][k] - Σⱼ&lt;ᵢ L[i][j]·U[j][k]   (k ≥ i)
+    L[k][i] = (A[k][i] - Σⱼ&lt;ᵢ L[k][j]·U[j][i]) / U[i][i]   (k &gt; i)
+
+<span class="cm">── Fase 2: Sustitución hacia adelante  L·y = b ──</span>
+<span class="kw">para</span> i = 0..n-1:
+    y[i] = b[i] - Σⱼ&lt;ᵢ L[i][j]·y[j]
+
+<span class="cm">── Fase 3: Sustitución hacia atrás  U·x = y ──</span>
+<span class="kw">para</span> i = n-1..0:
+    x[i] = (y[i] - Σⱼ&gt;ᵢ U[i][j]·x[j]) / U[i][i]</div>
+    </div>
+
+    <!-- Gradiente Conjugado -->
+    <div class="tab-pane" id="tGC">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        El Gradiente Conjugado es ideal para matrices simétricas y positivas definidas (SPD).
+        Minimiza iterativamente el residuo. Teóricamente converge en exactamente n pasos.
+      </p>
+      <div class="formula">
+        αₖ = (rₖᵀrₖ) / (pₖᵀApₖ)  ·  xₖ₊₁ = xₖ + αₖpₖ  ·  βₖ = (rₖ₊₁ᵀrₖ₊₁) / (rₖᵀrₖ)
+      </div>
+      <div class="algo"><span class="cm">── Inicialización ──</span>
+r₀ = b − A·x₀  ;  p₀ = r₀  ;  x₀ = [0,...,0]
+
+<span class="kw">para</span> k = 0, 1, ...:
+    Ap = A · pₖ
+    α = (rₖᵀ·rₖ) / (pₖᵀ·Ap)       <span class="cm">← tamaño de paso</span>
+    xₖ₊₁ = xₖ + α·pₖ               <span class="cm">← actualizar solución</span>
+    rₖ₊₁ = rₖ − α·Ap               <span class="cm">← actualizar residuo</span>
+    <span class="kw">si</span> ‖rₖ₊₁‖ &lt; ε: <span class="kw">terminar</span>  ✓
+    β = (rₖ₊₁ᵀ·rₖ₊₁) / (rₖᵀ·rₖ)  <span class="cm">← coeficiente de dirección</span>
+    pₖ₊₁ = rₖ₊₁ + β·pₖ             <span class="cm">← nueva dirección conjugada</span></div>
+      <div class="alert info mt-1">
+        <span class="aicon">ℹ</span>
+        <span>Para usar Gradiente Conjugado, la matriz A debe ser <strong>simétrica y positiva definida (SPD)</strong>.
+        Si la matriz no cumple esto, el resultado puede ser incorrecto.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── PREGUNTAS ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-orange">❓</div>
+      <h2>Preguntas que Responde la Simulación</h2>
+    </div>
+    <ul class="questions-list">
+      <li>¿Cuánto debe enviarse a cada zona para satisfacer la demanda mínima?</li>
+      <li>¿Qué pasa si una ruta queda bloqueada (coeficiente = 0)?</li>
+      <li>¿Qué zona queda más afectada ante una perturbación en el sistema?</li>
+      <li>¿El sistema es estable o sensible a pequeños cambios en los coeficientes?</li>
+      <li>¿La solución cambia mucho si la demanda aumenta un 10%?</li>
+      <li>¿Cuál método converge más rápido para este tipo de red?</li>
+    </ul>
+  </div>
+
+  <!-- ── CONCLUSIONES ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-green">🎯</div>
+      <h2>Conclusiones del Escenario A</h2>
+    </div>
+
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1.2rem">
+      La simulación de la red de abastecimiento mediante sistemas de ecuaciones lineales permitió
+      comparar cinco métodos numéricos aplicados a un problema real de distribución de carburantes
+      y alimentos en contexto de crisis. A continuación se sintetizan los hallazgos principales.
+    </p>
+
+    <!-- Comparativa de métodos -->
+    <div class="grid g-2" style="margin-bottom:1.2rem">
+      <div class="rpanel info">
+        <p style="font-weight:700;color:#93c5fd;margin-bottom:.5rem">Métodos Iterativos (Jacobi, Gauss-Seidel, SOR)</p>
+        <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.8">
+          <li>Gauss-Seidel converge en aproximadamente <strong style="color:#fff">la mitad de iteraciones</strong> que Jacobi, porque incorpora los valores actualizados dentro de la misma iteración.</li>
+          <li>SOR con ω ∈ (1, 2) puede superar a Gauss-Seidel; el ω óptimo depende del radio espectral de la matriz.</li>
+          <li>Todos requieren que A sea <strong style="color:#fff">diagonalmente dominante</strong> para garantizar convergencia; condición que modela correctamente plantas con alta capacidad propia.</li>
+        </ul>
+      </div>
+      <div class="rpanel success">
+        <p style="font-weight:700;color:#6ee7b7;margin-bottom:.5rem">Métodos Directos (LU, Gradiente Conjugado)</p>
+        <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.8">
+          <li>La descomposición LU (Doolittle) con pivoteo parcial produce la <strong style="color:#fff">solución exacta</strong> en una sola pasada; sin riesgo de divergencia.</li>
+          <li>El Gradiente Conjugado converge en a lo sumo n pasos teóricos; ideal para matrices simétricas y positivas definidas (SPD).</li>
+          <li>Para redes de distribución pequeñas (n ≤ 50), LU es la opción más robusta y directamente recomendable.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Conclusiones numeradas -->
+    <!-- Interpretación de resultados -->
+    <div id="interpDinamica" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem;margin-bottom:1.2rem">
+      <p style="font-weight:700;color:var(--accent);font-size:.95rem;margin-bottom:.5rem">📊 Interpretación de los Resultados</p>
+      <p style="font-size:.875rem;color:var(--text-muted);text-align:center;padding:.8rem 0">
+        ▶ Ingresa la matriz y ejecuta el cálculo para ver la interpretación con los valores reales.
+      </p>
+    </div>
+
+    <p class="form-label" style="margin-bottom:.6rem">Conclusiones Principales</p>
+    <ol style="font-size:.875rem;color:var(--text-secondary);padding-left:1.4rem;line-height:2">
+      <li>El sistema <strong>A·x = b</strong> modela correctamente las restricciones de balance en la red de distribución: cada fila representa una restricción de capacidad y cada columna una zona de demanda.</li>
+      <li>Ante un escenario de <strong style="color:var(--danger)">bloqueo de ruta</strong> (coeficiente a<sub>ij</sub> = 0), la solución cambia significativamente para las zonas afectadas, evidenciando la fragilidad de la red bajo perturbaciones externas.</li>
+      <li>La <strong>descomposición LU</strong> resultó ser el método de referencia: solución exacta sin iteraciones y residuo ‖Ax − b‖ prácticamente nulo. Es el método recomendado para la toma de decisiones en crisis.</li>
+      <li>Gauss-Seidel y SOR son adecuados cuando la matriz es demasiado grande para factorizar; su convergencia es garantizada si la red tiene alta demanda propia (diagonal dominante).</li>
+      <li>Los cinco métodos convergen a la misma solución cuando la matriz es bien condicionada, lo que <strong style="color:var(--success)">valida la consistencia del modelo matemático</strong> con el problema real.</li>
+      <li>El modelo numérico permite simular distintos escenarios de crisis (bloqueos, incremento de demanda, rutas alternativas) sin costos operativos, apoyando la planificación de emergencia de las autoridades.</li>
+    </ol>
+
+    <div class="alert success" style="margin-top:1rem">
+      <span class="aicon">✅</span>
+      <span><strong>Recomendación final:</strong> Para redes de hasta 4×4, usar <strong>Descomposición LU</strong> con pivoteo parcial.
+      Para redes más grandes y matrices dispersas, Gauss-Seidel con ω ≈ 1.2–1.5 (SOR) ofrece el mejor equilibrio entre velocidad y precisión.</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>Escenario A · Sistemas de Ecuaciones Lineales</strong></p>
+  <p style="margin-top:.4rem">Métodos: Jacobi · Gauss-Seidel · SOR · LU · Gradiente Conjugado</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/escenario-a.js"></script>
+<script>
+  document.getElementById('hamBtn').addEventListener('click', () =>
+    document.getElementById('navMenu').classList.toggle('open'));
+
+  document.getElementById('matSize').addEventListener('change', () => {
+    generarMatriz(parseInt(document.getElementById('matSize').value));
+    limpiarResultados();
+  });
+
+  function mostrarTab(btn, id) {
+    btn.closest('.card').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.closest('.card').querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+
+  // Inicializar
+  generarMatriz(3);
+  cargarEjemploBolivia();
+</script>
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escenario F — Rumores y Pánico (En Desarrollo)</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand"><div class="brand-icon">🧮</div><span>MétodosNum</span></a>
+    <button class="hamburger" id="hamBtn"><span></span><span></span><span></span></button>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="escenario-a.html">A · Abastecimiento</a></li>
+      <li><a href="escenario-b.html">B · Reservas</a></li>
+      <li><a href="escenario-c.html">C · Precios</a></li>
+      <li><a href="escenario-d.html">D <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-e.html">E <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-f.html" class="active">F <span class="badge-dev">DEV</span></a></li>
+      <li><a href="escenario-g.html">G <span class="badge-dev">DEV</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="page-hero">
+  <div class="page-hero-content">
+    <div class="scenario-chip">📢 Escenario F · Sistemas Lineales Mal Condicionados</div>
+    <h1>Rumores de Desabastecimiento y Pánico en la Red de Distribución</h1>
+    <p class="lead">
+      Modela cómo pequeñas perturbaciones en la información social pueden generar
+      grandes cambios en la demanda, analizando la sensibilidad del sistema
+      mediante el número de condición de la matriz.
+    </p>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ── BANNER ── -->
+  <div class="dev-banner">
+    <span class="dev-icon">📢</span>
+    <h2>Módulo en Desarrollo</h2>
+    <p>Este módulo está planificado para simular el efecto de rumores en la red de distribución.
+    La fundamentación teórica completa se presenta a continuación.</p>
+    <div class="progress-wrap">
+      <div class="progress-bg"><div class="progress-fill" style="width:20%"></div></div>
+      <div class="progress-label"><span>Progreso de implementación</span><span>20%</span></div>
+    </div>
+  </div>
+
+  <!-- ── CONTEXTO ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-cyan">📋</div>
+      <h2>Contexto del Problema — Sistemas Mal Condicionados</h2>
+    </div>
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1rem">
+      Un <strong style="color:#fff">sistema mal condicionado</strong> es aquel donde una
+      <strong style="color:var(--danger)">pequeña perturbación</strong> en los datos de entrada
+      produce un <strong style="color:var(--danger)">cambio desproporcionadamente grande</strong>
+      en la solución. En el contexto de rumores sociales, esto modela exactamente cómo
+      un rumor menor puede provocar un pánico de compra masivo.
+    </p>
+
+    <!-- Niveles de rumor -->
+    <div class="grid g-3" style="margin-bottom:1rem">
+      <div class="card" style="margin-bottom:0;background:var(--bg-surface);border-color:rgba(16,185,129,.3);text-align:center">
+        <div style="font-size:2rem;margin-bottom:.5rem">😐</div>
+        <h3 style="color:var(--success);font-size:.95rem">Rumor Bajo</h3>
+        <p style="font-size:.78rem;color:var(--text-muted)">Δb/b ≈ 1%<br>Perturbación mínima</p>
+        <div class="formula" style="margin-top:.5rem;font-size:.75rem">Δx/x ≈ κ·1%</div>
+      </div>
+      <div class="card" style="margin-bottom:0;background:var(--bg-surface);border-color:rgba(245,158,11,.3);text-align:center">
+        <div style="font-size:2rem;margin-bottom:.5rem">😰</div>
+        <h3 style="color:var(--accent);font-size:.95rem">Rumor Alto</h3>
+        <p style="font-size:.78rem;color:var(--text-muted)">Δb/b ≈ 5%<br>Compras impulsivas</p>
+        <div class="formula" style="margin-top:.5rem;font-size:.75rem">Δx/x ≈ κ·5%</div>
+      </div>
+      <div class="card" style="margin-bottom:0;background:var(--bg-surface);border-color:rgba(239,68,68,.3);text-align:center">
+        <div style="font-size:2rem;margin-bottom:.5rem">😱</div>
+        <h3 style="color:var(--danger);font-size:.95rem">Pánico Masivo</h3>
+        <p style="font-size:.78rem;color:var(--text-muted)">Δb/b ≈ 10%<br>Desabasto artificial</p>
+        <div class="formula" style="margin-top:.5rem;font-size:.75rem">Δx/x ≈ κ·10%</div>
+      </div>
+    </div>
+
+    <!-- Variables -->
+    <div class="card" style="margin-bottom:0;background:var(--bg-surface)">
+      <p style="font-size:.82rem;font-weight:800;color:var(--text-secondary);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.05em">Definición de Variables</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Variable</th><th>Descripción</th><th>Rol en el Modelo</th></tr></thead>
+          <tbody>
+            <tr><td class="var-name">A</td><td class="tnorm">Matriz de distribución original (sin rumor)</td><td class="tnorm">Ax = b (sistema base)</td></tr>
+            <tr><td class="var-name">x</td><td class="tnorm">Vector de distribución nominal</td><td class="tnorm">Cantidades enviadas por zona</td></tr>
+            <tr><td class="var-name">b</td><td class="tnorm">Demandas originales por zona</td><td class="tnorm">Lado derecho sin perturbación</td></tr>
+            <tr><td class="var-name">δb</td><td class="tnorm">Perturbación en demandas (rumor)</td><td class="tnorm">Pequeño cambio en b por pánico</td></tr>
+            <tr><td class="var-name">δx</td><td class="tnorm">Cambio en la distribución resultante</td><td class="tnorm">Impacto del rumor en la solución</td></tr>
+            <tr><td class="var-name">κ(A)</td><td class="tnorm">Número de condición de A = ‖A‖·‖A⁻¹‖</td><td class="tnorm">Mide la sensibilidad del sistema</td></tr>
+            <tr><td class="var-name">‖δx‖/‖x‖</td><td class="tnorm">Error relativo en la solución</td><td class="tnorm">≤ κ(A)·‖δb‖/‖b‖</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="formula" style="margin-top:1rem">
+      Cota de error relativo:  ‖δx‖/‖x‖ ≤ κ(A) · ‖δb‖/‖b‖<br><br>
+      κ(A) = ‖A‖₂ · ‖A⁻¹‖₂ = σ_max / σ_min   (via valores singulares)
+    </div>
+    <div class="alert warning mt-1">
+      <span class="aicon">⚠</span>
+      <span>Si κ(A) = 1000, un rumor que perturba la demanda en solo 1% puede cambiar
+      la distribución en hasta 1000%. Esto explica los efectos del pánico.</span>
+    </div>
+  </div>
+
+  <!-- ── MÉTODOS ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-cyan">📖</div>
+      <h2>Análisis de Condicionamiento</h2>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="mostrarTab(this,'tNumCond')">Número de Condición</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tPert')">Perturbación</button>
+      <button class="tab-btn" onclick="mostrarTab(this,'tEsc')">Escenarios de Rumor</button>
+    </div>
+
+    <div class="tab-pane active" id="tNumCond">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        El número de condición κ(A) cuantifica cuánto amplifica el sistema las perturbaciones.
+        Un sistema bien condicionado tiene κ cercano a 1. Un sistema mal condicionado puede
+        tener κ de miles o millones.
+      </p>
+      <div class="formula">
+        κ(A) = ‖A‖ · ‖A⁻¹‖<br>
+        Para norma 2: κ₂(A) = σ_máx(A) / σ_mín(A)  (cociente de valores singulares)
+      </div>
+      <div class="algo"><span class="cm">── Interpretación del Número de Condición ──</span>
+κ(A) ≈ 1          → Sistema bien condicionado (insensible a perturbaciones)
+κ(A) ≈ 10–100     → Ligera sensibilidad
+κ(A) ≈ 1000–10000 → Sistema sensible (rumores impactan distribución)
+κ(A) → ∞          → Sistema casi singular (singular = sin solución única)</div>
+    </div>
+
+    <div class="tab-pane" id="tPert">
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.75rem">
+        Se resolverá el sistema perturbado A(x+δx) = b+δb y se comparará x+δx con x.
+        La diferencia muestra cuánto cambia la distribución por el rumor.
+      </p>
+      <div class="algo"><span class="cm">── Análisis de Perturbación ──</span>
+<span class="cm">1. Resolver Ax = b (sistema sin rumor)</span>
+<span class="cm">2. Crear perturbación: δb = nivel_rumor × b × vector_unitario_aleatorio</span>
+<span class="cm">3. Resolver A·(x+δx) = b + δb</span>
+<span class="cm">4. Calcular error relativo: ‖δx‖/‖x‖</span>
+<span class="cm">5. Comparar con la cota teórica: κ(A)·‖δb‖/‖b‖</span>
+<span class="cm">6. Visualizar: zona más afectada por el rumor</span></div>
+    </div>
+
+    <div class="tab-pane" id="tEsc">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nivel de Rumor</th><th>Perturbación δb/b</th><th>Sistema bien cond. (κ=10)</th><th>Sistema mal cond. (κ=1000)</th><th>Efecto social</th></tr></thead>
+          <tbody>
+            <tr><td class="tnorm" style="color:var(--success)">😐 Sin rumor</td><td>0%</td><td class="ok">0%</td><td class="ok">0%</td><td class="tnorm">Distribución normal</td></tr>
+            <tr><td class="tnorm" style="color:var(--info)">📣 Rumor bajo</td><td>1%</td><td class="ok">≤ 10%</td><td class="err">≤ 1000%</td><td class="tnorm">Stock se reduce en tiendas</td></tr>
+            <tr><td class="tnorm" style="color:var(--accent)">📢 Rumor medio</td><td>5%</td><td class="hl">≤ 50%</td><td class="err">Colapso</td><td class="tnorm">Filas en estaciones</td></tr>
+            <tr><td class="tnorm" style="color:var(--danger)">🔊 Pánico masivo</td><td>10%</td><td class="err">≤ 100%</td><td class="err">Colapso total</td><td class="tnorm">Desabasto artificial</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="alert danger mt-1">
+        <span class="aicon">🚨</span>
+        <span>Un sistema con κ = 1000 es tan frágil que un <strong>rumor del 0.1%</strong>
+        puede causar errores de distribución del 100%. El diseño de redes resilientes
+        busca minimizar κ(A).</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PREVIEW ── -->
+  <div class="card">
+    <div class="card-header"><div class="card-icon ci-cyan">🔧</div><h2>Vista Previa del Simulador — Próximamente</h2></div>
+    <div class="preview-disabled">
+      <div class="grid g-2">
+        <div>
+          <div class="form-group">
+            <label class="form-label">Tipo de red de distribución</label>
+            <select class="form-control" disabled>
+              <option>Red bien condicionada (κ ≈ 10)</option>
+              <option>Red moderada (κ ≈ 100)</option>
+              <option>Red mal condicionada (κ ≈ 1000)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nivel de rumor / perturbación (%)</label>
+            <input class="form-control" type="range" min="0" max="20" value="5" disabled>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Zona donde se origina el rumor</label>
+            <select class="form-control" disabled>
+              <option>Zona Norte</option>
+              <option>Zona Centro</option>
+              <option>Zona Sur</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" disabled>▶ Simular Efecto del Rumor</button>
+        </div>
+        <div>
+          <div class="stats-grid" style="grid-template-columns:repeat(2,1fr)">
+            <div class="stat-box"><span class="stat-val c-accent">–––</span><span class="stat-lbl">κ(A) calculado</span></div>
+            <div class="stat-box"><span class="stat-val err">–––</span><span class="stat-lbl">Error relativo máx.</span></div>
+            <div class="stat-box"><span class="stat-val warn">–––</span><span class="stat-lbl">Zona más afectada</span></div>
+            <div class="stat-box"><span class="stat-val">–––</span><span class="stat-lbl">¿Sistema estable?</span></div>
+          </div>
+          <div class="chart-box" style="margin-top:.5rem">
+            <div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-muted)">
+              📊 Distribución original vs. perturbada
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PREGUNTAS ── -->
+  <div class="card">
+    <div class="card-header"><div class="card-icon ci-orange">❓</div><h2>Preguntas que Responderá la Simulación</h2></div>
+    <ul class="questions-list">
+      <li>¿Qué pasa si la demanda de una zona aumenta solo un 5% por un rumor?</li>
+      <li>¿La solución de distribución cambia poco o de manera catastrófica?</li>
+      <li>¿El sistema de distribución es estable o mal condicionado?</li>
+      <li>¿Cómo afecta el rumor a la distribución en las zonas no involucradas?</li>
+      <li>¿Qué zona o mercado se vuelve más vulnerable ante perturbaciones sociales?</li>
+      <li>¿Cómo diseñar una red de distribución más robusta ante rumores?</li>
+    </ul>
+  </div>
+
+  <!-- ── CONCLUSIONES ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-green">🎯</div>
+      <h2>Conclusiones del Escenario F</h2>
+      <span class="tag t-orange" style="margin-left:auto">Marco teórico</span>
+    </div>
+
+    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:1.2rem">
+      En contextos de crisis, los datos de demanda y oferta llegan con ruido, incertidumbre
+      y manipulación deliberada (rumores). El número de condición κ(A) cuantifica cuánto
+      se amplifica ese error en la solución del sistema de distribución, determinando
+      la confiabilidad de las decisiones tomadas con base en datos imprecisos.
+    </p>
+
+    <div class="grid g-2" style="margin-bottom:1.2rem">
+      <div class="rpanel danger">
+        <p style="font-weight:700;color:#fca5a5;margin-bottom:.5rem">Interpretación del Número de Condición</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>κ(A)</th><th>Clasificación</th><th>Impacto en distribución</th></tr></thead>
+            <tbody>
+              <tr><td class="ok">1 – 100</td><td class="ok">Bien condicionado</td><td>Datos con 1% de error → solución con ~1% de error</td></tr>
+              <tr><td class="hl">10² – 10⁶</td><td class="hl">Moderado</td><td>Datos con 1% de error → solución con hasta 1–1000% de error</td></tr>
+              <tr><td class="err">&gt; 10⁶</td><td class="err">Mal condicionado</td><td>Cualquier perturbación vuelve la solución poco confiable</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="rpanel warning">
+        <p style="font-weight:700;color:#fcd34d;margin-bottom:.5rem">Fuentes de Error en la Crisis</p>
+        <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.8">
+          <li><strong>Rumores de desabastecimiento:</strong> aumentan artificialmente la demanda bᵢ → perturbación en b.</li>
+          <li><strong>Bloqueos parciales:</strong> reducen los coeficientes aᵢⱼ → perturbación en A.</li>
+          <li><strong>Datos de campo imprecisos:</strong> errores de medición del 2–5% en los coeficientes de distribución.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Interpretación de resultados -->
+    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem;margin-bottom:1.2rem">
+      <p style="font-weight:700;color:var(--accent);font-size:.95rem;margin-bottom:.8rem">📊 Interpretación de los Resultados</p>
+
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.8rem">
+        Para el sistema de distribución del Escenario A (3 zonas, 5 métodos), el
+        <strong style="color:#fff">número de condición κ(A)</strong> determina cuánto se amplifican los
+        errores de datos en la solución final de asignación de recursos:
+      </p>
+
+      <div class="grid g-2" style="margin-bottom:.8rem">
+        <div>
+          <p style="font-size:.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:.4rem">Impacto de rumores de desabastecimiento en la distribución:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Perturbación en b</th><th>κ(A) = 15</th><th>κ(A) = 200</th><th>κ(A) = 5 000</th></tr></thead>
+              <tbody>
+                <tr><td>δb = 2% (medición imprecisa)</td><td class="ok">δx ≤ 0.03%</td><td class="hl">δx ≤ 0.4%</td><td class="err">δx ≤ 10%</td></tr>
+                <tr><td>δb = 5% (rumor leve)</td><td class="ok">δx ≤ 0.075%</td><td class="hl">δx ≤ 1%</td><td class="err">δx ≤ 25%</td></tr>
+                <tr><td>δb = 10% (pánico social)</td><td class="ok">δx ≤ 0.15%</td><td class="hl">δx ≤ 2%</td><td class="err">δx ≤ 50%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:.4rem">Escenarios calculados con κ típico:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Configuración de red</th><th>κ(A) estimado</th><th>Confiabilidad</th></tr></thead>
+              <tbody>
+                <tr><td>Alta diag. dominante (A nominal)</td><td class="ok">10 – 30</td><td class="ok">Muy alta — decisiones confiables</td></tr>
+                <tr><td>Rutas redundantes moderadas</td><td class="hl">100 – 500</td><td class="hl">Media — verificar con campo</td></tr>
+                <tr><td>Bloqueos parciales (30% rutas)</td><td class="err">> 2 000</td><td class="err">Baja — solución poco confiable</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:.4rem">
+        <strong style="color:#fff">¿Qué significa esto para la gestión de la crisis?</strong>
+      </p>
+      <ul style="font-size:.85rem;color:var(--text-secondary);padding-left:1.2rem;line-height:1.9;margin-bottom:.5rem">
+        <li>Si en el momento de la crisis κ(A) ≈ 15 (red bien condicionada), un rumor que infle la demanda
+            reportada en un 10% solo distorsionará la asignación de recursos en <strong>~0.15%</strong> — prácticamente
+            irrelevante para la gestión operativa.</li>
+        <li>En cambio, si bloqueos parciales degradan la red y κ(A) sube a ~5 000, ese mismo rumor del 10%
+            puede causar <strong style="color:var(--danger)">errores de hasta 50%</strong> en la asignación:
+            una zona recibe el doble y otra queda sin abastecimiento.</li>
+        <li>La norma de la perturbación relativa en la solución satisface <code>‖δx‖/‖x‖ ≤ κ(A)·‖δb‖/‖b‖</code>,
+            lo que convierte al número de condición en una <strong>alarma cuantitativa</strong> para el comité
+            de crisis: cuando κ(A) > 1 000, los datos deben verificarse en campo antes de ejecutar la distribución.</li>
+        <li>La norma infinito (‖A‖∞ = máx suma de fila) resulta la más útil en este contexto porque corresponde
+            directamente al mayor flujo total de cualquier punto de distribución — el cuello de botella logístico real.</li>
+      </ul>
+    </div>
+
+    <p class="form-label" style="margin-bottom:.6rem">Conclusiones Principales</p>
+    <ol style="font-size:.875rem;color:var(--text-secondary);padding-left:1.4rem;line-height:2">
+      <li>El <strong>número de condición κ(A) = ‖A‖·‖A⁻¹‖</strong> es el indicador fundamental de la sensibilidad de un sistema de distribución: matrices con κ grande son vulnerables a cualquier perturbación en los datos.</li>
+      <li>En redes de distribución diseñadas con <strong>alta diagonal dominante</strong> (Escenario A), κ(A) es típicamente pequeño (< 100), lo que garantiza que los rumores y errores de medición no comprometan la solución óptima.</li>
+      <li>Redes con rutas redundantes producen matrices A con mayor κ(A): más alternativas de distribución implica mayor sensibilidad a qué datos se usen para modelar cada ruta.</li>
+      <li>Una perturbación δb del 5% en las demandas (equivalente a un rumor de desabastecimiento que aumenta la demanda registrada) puede provocar cambios de hasta <strong>κ·5% en la solución x</strong>, lo que puede derivar en sobreabastecimiento de unas zonas y déficit en otras.</li>
+      <li>Este análisis permite identificar qué zonas de la red son más <strong>vulnerables a la desinformación</strong> durante la crisis, orientando los esfuerzos de comunicación oficial y verificación de datos.</li>
+    </ol>
+
+    <div class="alert info" style="margin-top:1rem">
+      <span class="aicon">⚙</span>
+      <span>Este módulo, una vez implementado, calculará automáticamente κ(A) para cualquier
+      sistema ingresado en el Escenario A y mostrará la sensibilidad de cada zona de distribución
+      ante perturbaciones del 1%, 5% y 10% en los datos de demanda.</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p><strong>Escenario F · Sistemas Lineales Mal Condicionados — En Desarrollo</strong></p>
+  <p style="margin-top:.4rem">Análisis planificado: Número de Condición · Perturbación · Sensibilidad</p>
+</footer>
+
+<script>
+  document.getElementById('hamBtn').addEventListener('click', () =>
+    document.getElementById('navMenu').classList.toggle('open'));
+  function mostrarTab(btn, id) {
+    btn.closest('.card').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.closest('.card').querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+</script>
+</body>
+</html>
