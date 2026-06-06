@@ -139,6 +139,7 @@ a { color: inherit; text-decoration: none; }
 .grid { display: grid; gap: 1.5rem; }
 .g-2   { grid-template-columns: repeat(2,1fr); }
 .g-3   { grid-template-columns: repeat(3,1fr); }
+.g-4   { grid-template-columns: repeat(4,1fr); }
 .g-1-2 { grid-template-columns: 1fr 2fr; }
 .g-2-1 { grid-template-columns: 2fr 1fr; }
 
@@ -196,6 +197,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--text-secondary); margin-bottom: .35rem;
 }
 .req { color: var(--danger); }
+.form-hint { font-size: .75rem; color: var(--text-muted); margin-top: .25rem; display: block; }
 
 .form-control {
   width: 100%;
@@ -306,9 +308,10 @@ tbody td {
   font-family: var(--mono); font-size: .78rem;
 }
 td.tnorm { font-family: inherit; font-size: .82rem; }
-td.hl { color: var(--accent); font-weight: 700; }
-td.ok { color: var(--success); font-weight: 700; }
-td.err { color: var(--danger); font-weight: 700; }
+td.hl   { color: var(--accent);  font-weight: 700; }
+td.ok   { color: var(--success); font-weight: 700; }
+td.err  { color: var(--danger);  font-weight: 700; }
+td.warn { color: var(--warning); font-weight: 700; }
 
 /* ─── RESULT PANELS ─── */
 .result-section { margin-top: 2rem; }
@@ -522,6 +525,7 @@ td.err { color: var(--danger); font-weight: 700; }
 @media (max-width: 1024px) {
   .g-2, .g-1-2, .g-2-1 { grid-template-columns: 1fr; }
   .g-3 { grid-template-columns: repeat(2,1fr); }
+  .g-4 { grid-template-columns: repeat(2,1fr); }
 }
 @media (max-width: 768px) {
   .navbar-nav {
@@ -533,7 +537,7 @@ td.err { color: var(--danger); font-weight: 700; }
   }
   .navbar-nav.open { display: flex; }
   .hamburger { display: flex; }
-  .g-3 { grid-template-columns: 1fr; }
+  .g-3, .g-4 { grid-template-columns: 1fr; }
   .row.c3, .row.c4 { grid-template-columns: repeat(2,1fr); }
   .chart-box { height: 270px; }
   .chart-box.tall { height: 340px; }
